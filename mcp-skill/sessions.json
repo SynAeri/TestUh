@@ -1,0 +1,30 @@
+{
+  "sessions": [
+    {
+      "id": "sess_7fb7c3c0",
+      "repo": "PlayCrowd",
+      "branch": "main",
+      "agent": "claude",
+      "engineer": "jordanm",
+      "ticket_id": null,
+      "started_at": "2026-03-21T15:17:49.631761+00:00",
+      "ended_at": "2026-03-21T15:17:55.975941+00:00",
+      "decision_ids": [
+        "dec_8f7198bc"
+      ]
+    }
+  ],
+  "decisions": [
+    {
+      "id": "dec_8f7198bc",
+      "session_id": "sess_7fb7c3c0",
+      "summary": "Test decision logging for MCP verification",
+      "reasoning": "Testing the nexus MCP server to verify all functions work correctly. This is a test decision to ensure the logging mechanism captures decisions properly.",
+      "impact": "low",
+      "files_changed": [],
+      "ticket_id": null,
+      "timestamp": "2026-03-21T15:17:51.289875+00:00",
+      "pr_milestone": null
+    }
+  ]
+}
