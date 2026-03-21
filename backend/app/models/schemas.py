@@ -137,6 +137,17 @@ class ReviewAssignResponse(BaseModel):
     message: str
 
 
+# ===== GitHub Webhook Models =====
+
+class GitHubWebhookPR(BaseModel):
+    """GitHub webhook payload for pull request events"""
+    action: str
+    number: int
+    pull_request: Dict[str, Any]
+    repository: Dict[str, Any]
+    sender: Dict[str, Any]
+
+
 # ===== AI Session Models (MCP Skill Integration) =====
 
 class AISession(BaseModel):
@@ -147,10 +158,11 @@ class AISession(BaseModel):
     agent: str = "claude"
     engineer: Optional[str] = None
     ticket_id: Optional[str] = None
-    started_at: str  # ISO timestamp
+    started_at: str
     ended_at: Optional[str] = None
     pr_id: Optional[str] = None
     decision_count: int = 0
+    pr_milestones: List[Dict[str, Any]] = Field(default_factory=list)
     metadata: Optional[Dict[str, Any]] = None
 
 class AIDecision(BaseModel):
@@ -162,7 +174,8 @@ class AIDecision(BaseModel):
     impact: Literal["low", "medium", "high"]
     files_changed: List[str] = Field(default_factory=list)
     ticket_id: Optional[str] = None
-    timestamp: str  # ISO timestamp
+    timestamp: str
+    pr_milestone: Optional[Dict[str, Any]] = None
     metadata: Optional[Dict[str, Any]] = None
 
 class AISessionEndRequest(BaseModel):

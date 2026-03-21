@@ -1,65 +1,30 @@
 {
   "sessions": [
     {
-      "id": "sess_02d9fb8d",
-      "repo": "SynAeri/TestUh",
-      "branch": "anusha_s",
+      "id": "sess_7fb7c3c0",
+      "repo": "PlayCrowd",
+      "branch": "main",
       "agent": "claude",
-      "engineer": "anusha",
+      "engineer": "jordanm",
       "ticket_id": null,
-      "started_at": "2026-03-21T15:00:26.553406+00:00",
-      "ended_at": null,
-      "decision_ids": []
-    },
-    {
-      "id": "sess_001ef86d",
-      "repo": "SynAeri/TestUh",
-      "branch": "anusha_s",
-      "agent": "claude",
-      "engineer": "anusha",
-      "ticket_id": null,
-      "started_at": "2026-03-21T15:14:08.114428+00:00",
-      "ended_at": null,
+      "started_at": "2026-03-21T15:17:49.631761+00:00",
+      "ended_at": "2026-03-21T15:17:55.975941+00:00",
       "decision_ids": [
-        "dec_7beffa6b"
+        "dec_8f7198bc"
       ]
-    },
-    {
-      "id": "sess_fee25e69",
-      "repo": "SynAeri/TestUh",
-      "branch": "anusha_s",
-      "agent": "claude",
-      "engineer": "anusha",
-      "ticket_id": null,
-      "started_at": "2026-03-21T15:47:18.243758+00:00",
-      "ended_at": null,
-      "decision_ids": []
-    },
-    {
-      "id": "sess_4a41db53",
-      "repo": "SynAeri/TestUh",
-      "branch": "anusha_s",
-      "agent": "claude",
-      "engineer": "anusha",
-      "ticket_id": null,
-      "started_at": "2026-03-21T15:47:18.983959+00:00",
-      "ended_at": null,
-      "decision_ids": []
     }
   ],
   "decisions": [
     {
-      "id": "dec_7beffa6b",
-      "session_id": "sess_001ef86d",
-      "summary": "Connected MCP skill to backend via NEXUS_API_URL",
-      "reasoning": "Needed to POST session and decision data to FastAPI backend instead of only saving locally to sessions.json",
-      "impact": "high",
-      "files_changed": [
-        ".mcp.json",
-        "mcp-skill/server.py"
-      ],
+      "id": "dec_8f7198bc",
+      "session_id": "sess_7fb7c3c0",
+      "summary": "Test decision logging for MCP verification",
+      "reasoning": "Testing the nexus MCP server to verify all functions work correctly. This is a test decision to ensure the logging mechanism captures decisions properly.",
+      "impact": "low",
+      "files_changed": [],
       "ticket_id": null,
-      "timestamp": "2026-03-21T15:18:20.575089+00:00"
+      "timestamp": "2026-03-21T15:17:51.289875+00:00",
+      "pr_milestone": null
     }
   ]
 }
