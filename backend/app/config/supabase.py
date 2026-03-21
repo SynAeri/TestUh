@@ -1,16 +1,18 @@
-# Supabase client configuration for Nexus OS
-# Lazy initialization to avoid import-time errors when .env is missing
+# Supabase client configuration
+# Connects to Supabase for AI session logging and data storage
 
 import os
-from typing import Optional
 from supabase import create_client, Client
-from dotenv import load_dotenv
-
-load_dotenv()
+from typing import Optional
 
 _supabase_client: Optional[Client] = None
 
+
 def get_supabase_client() -> Client:
+    """
+    Get or create Supabase client singleton.
+    Reads credentials from environment variables.
+    """
     global _supabase_client
 
     if _supabase_client is None:
@@ -19,8 +21,8 @@ def get_supabase_client() -> Client:
 
         if not supabase_url or not supabase_key:
             raise ValueError(
-                "SUPABASE_URL and SUPABASE_KEY must be set in environment variables. "
-                "Create a .env file with these values."
+                "Missing Supabase credentials. "
+                "Set SUPABASE_URL and SUPABASE_KEY in .env file"
             )
 
         _supabase_client = create_client(supabase_url, supabase_key)
