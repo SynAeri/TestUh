@@ -1,6 +1,9 @@
 # FastAPI main application for AI-Powered Incident Response Platform
 # Provides MVP endpoints for hackathon golden road demo
 
+from dotenv import load_dotenv
+load_dotenv()
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.features.context import context
@@ -8,6 +11,8 @@ from app.features.demo import demo
 from app.features.incidents import incidents
 from app.features.fix import fix
 from app.features.ai_sessions import ai_sessions
+from app.features.config import config
+from app.features.webhooks import github
 from app.shared.data.seed import seed_golden_road_data
 
 app = FastAPI(
@@ -29,6 +34,8 @@ app.include_router(demo.router)
 app.include_router(incidents.router)
 app.include_router(fix.router)
 app.include_router(ai_sessions.router)
+app.include_router(config.router)
+app.include_router(github.router)
 
 @app.on_event("startup")
 async def startup_event():
@@ -55,7 +62,12 @@ async def root():
             "POST /sessions/{id}/end - End AI session (MCP skill)",
             "GET /sessions/{id} - Get session with decisions",
             "GET /sessions - List all AI sessions",
-            "GET /decisions - List all AI decisions"
+            "GET /sessions/{id}/pr-timeline - Get decisions grouped by PR milestones",
+            "GET /decisions - List all AI decisions",
+            "GET /config/allowed-repos - Get allowed repos for MCP skill",
+            "GET /config/status - Get MCP configuration status",
+            "POST /webhooks/github - GitHub webhook for PR events",
+            "GET /webhooks/github/test - Test webhook endpoint"
         ]
     }
 
