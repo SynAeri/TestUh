@@ -7,6 +7,7 @@ from app.features.context import context
 from app.features.demo import demo
 from app.features.incidents import incidents
 from app.features.fix import fix
+from app.features.ai_sessions import ai_sessions
 from app.shared.data.seed import seed_golden_road_data
 
 app = FastAPI(
@@ -27,6 +28,7 @@ app.include_router(context.router)
 app.include_router(demo.router)
 app.include_router(incidents.router)
 app.include_router(fix.router)
+app.include_router(ai_sessions.router)
 
 @app.on_event("startup")
 async def startup_event():
@@ -47,7 +49,13 @@ async def root():
             "GET /api/incidents - List all incidents",
             "POST /api/fix/draft - Draft AI fix for incident",
             "POST /api/reviews/assign - Assign fix for review",
-            "POST /api/demo/reset - Reset demo data"
+            "POST /api/demo/reset - Reset demo data",
+            "POST /sessions - Create AI session (MCP skill)",
+            "POST /decisions - Log AI decision (MCP skill)",
+            "POST /sessions/{id}/end - End AI session (MCP skill)",
+            "GET /sessions/{id} - Get session with decisions",
+            "GET /sessions - List all AI sessions",
+            "GET /decisions - List all AI decisions"
         ]
     }
 

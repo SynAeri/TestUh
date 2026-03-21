@@ -137,6 +137,40 @@ class ReviewAssignResponse(BaseModel):
     message: str
 
 
+# ===== AI Session Models (MCP Skill Integration) =====
+
+class AISession(BaseModel):
+    """AI coding session from MCP skill"""
+    id: str
+    repo: str
+    branch: str
+    agent: str = "claude"
+    engineer: Optional[str] = None
+    ticket_id: Optional[str] = None
+    started_at: str  # ISO timestamp
+    ended_at: Optional[str] = None
+    pr_id: Optional[str] = None
+    decision_count: int = 0
+    metadata: Optional[Dict[str, Any]] = None
+
+class AIDecision(BaseModel):
+    """AI decision logged during coding session"""
+    id: str
+    session_id: str
+    summary: str
+    reasoning: str
+    impact: Literal["low", "medium", "high"]
+    files_changed: List[str] = Field(default_factory=list)
+    ticket_id: Optional[str] = None
+    timestamp: str  # ISO timestamp
+    metadata: Optional[Dict[str, Any]] = None
+
+class AISessionEndRequest(BaseModel):
+    """Request to end an AI session"""
+    ended_at: str
+    pr_id: Optional[str] = None
+
+
 # ===== Demo Packet Model =====
 
 class DemoPacket(BaseModel):
