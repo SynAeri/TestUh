@@ -1,27 +1,28 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import NavBar from "@/components/nav-bar";
+import SourceDetailModal from "@/components/source-detail-modal";
+import {
+  MOCK_APPS,
+  getTotalAnnualCost,
+  getTotalMonthlySavings,
+  getUsersForRemoval,
+} from "@/lib/mock-data";
 
 const fallbackApiBaseUrl =
   "https://unflattering-elinor-distinctively.ngrok-free.dev";
 const apiBaseUrl =
-  process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") ??
-  fallbackApiBaseUrl;
+  process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") ?? fallbackApiBaseUrl;
 
 type Severity = "info" | "warning" | "critical";
-
 type Insight = {
   metric: string;
   value: string;
   description: string;
   severity: Severity;
 };
-
-type InsightsResponse = {
-  insights: Insight[];
-  generated_at: string;
-};
-
+type InsightsResponse = { insights: Insight[]; generated_at: string };
 type SourceCitation = {
   id: string;
   source_type: string;
@@ -29,62 +30,57 @@ type SourceCitation = {
   metadata: Record<string, unknown>;
   relevance_score: number;
 };
-
-type QueryResponse = {
-  answer: string;
-  query: string;
-  sources: SourceCitation[];
-};
+type QueryResponse = { answer: string; query: string; sources: SourceCitation[] };
 
 const severityConfig: Record<
   Severity,
-  { bar: string; badge: string; card: string; label: string; dot: string }
+  { bar: string; badge: string; card: string; label: string }
 > = {
-  info: {
-    bar: "bg-sky-400",
-    badge: "bg-sky-500/10 text-sky-300 border-sky-400/20",
-    card: "border-white/8 bg-white/3 hover:border-sky-400/20 hover:bg-sky-400/3",
-    label: "Info",
-    dot: "bg-sky-400",
+  critical: {
+    bar: "bg-rose-500",
+    badge: "bg-rose-500/10 text-rose-300 border-rose-400/20",
+    card: "border-rose-400/20 bg-rose-400/3 hover:border-rose-400/35",
+    label: "Priority",
   },
   warning: {
     bar: "bg-amber-400",
     badge: "bg-amber-500/10 text-amber-300 border-amber-400/20",
     card: "border-amber-400/15 bg-amber-400/3 hover:border-amber-400/30",
     label: "Watchlist",
-    dot: "bg-amber-400",
   },
-  critical: {
-    bar: "bg-rose-500",
-    badge: "bg-rose-500/10 text-rose-300 border-rose-400/20",
-    card: "border-rose-400/20 bg-rose-400/3 hover:border-rose-400/35",
-    label: "Priority",
-    dot: "bg-rose-500",
+  info: {
+    bar: "bg-sky-400",
+    badge: "bg-sky-500/10 text-sky-300 border-sky-400/20",
+    card: "border-white/8 bg-white/3 hover:border-sky-400/20",
+    label: "Info",
   },
 };
 
-const sourceTypeConfig: Record<
-  string,
-  { emoji: string; color: string; label: string }
-> = {
+const sourceTypeConfig: Record<string, { emoji: string; color: string; label: string }> = {
   slack: { emoji: "💬", color: "text-purple-300", label: "Slack" },
   pdf: { emoji: "📄", color: "text-rose-300", label: "PDF" },
   video: { emoji: "🎬", color: "text-blue-300", label: "Video" },
   doc: { emoji: "📝", color: "text-emerald-300", label: "Doc" },
 };
 
-export default function Home() {
-  const [health, setHealth] = useState<"checking" | "healthy" | "offline">(
-    "checking",
-  );
+export default function HomePage() {
+  const [health, setHealth] = useState<"checking" | "healthy" | "offline">("checking");
   const [insights, setInsights] = useState<Insight[]>([]);
   const [generatedAt, setGeneratedAt] = useState("");
   const [insightsError, setInsightsError] = useState("");
-  const [query, setQuery] = useState("What are the main operational risks?");
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSeeding, setIsSeeding] = useState(false);
+  const [seedSuccess, setSeedSuccess] = useState(false);
+
+  const [query, setQuery] = useState("What are the main documentation tool risks?");
   const [queryResult, setQueryResult] = useState<QueryResponse | null>(null);
   const [queryError, setQueryError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [selectedSource, setSelectedSource] = useState<SourceCitation | null>(null);
+
+  const totalAnnualCost = getTotalAnnualCost(MOCK_APPS);
+  const totalMonthlySavings = getTotalMonthlySavings(MOCK_APPS);
+  const removalCandidates = getUsersForRemoval(MOCK_APPS);
 
   useEffect(() => {
     void loadDashboard();
@@ -97,60 +93,55 @@ export default function Home() {
         fetch(`${apiBaseUrl}/health`, { cache: "no-store" }),
         fetch(`${apiBaseUrl}/insights`, { cache: "no-store" }),
       ]);
-
       setHealth(healthRes.ok ? "healthy" : "offline");
-
-      if (!insightsRes.ok) {
-        throw new Error(`Insights request failed with ${insightsRes.status}`);
-      }
-
+      if (!insightsRes.ok) throw new Error(`Insights failed: ${insightsRes.status}`);
       const data = (await insightsRes.json()) as InsightsResponse;
       setInsights(data.insights);
       setGeneratedAt(data.generated_at);
       setInsightsError("");
-    } catch (err) {
+    } catch {
       setHealth("offline");
-      setInsightsError(
-        err instanceof Error
-          ? err.message
-          : "The backend did not respond as expected.",
-      );
+      setInsightsError("Backend unreachable. Displaying cached signals.");
     } finally {
       setIsLoading(false);
     }
   }
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  async function handleSeed() {
+    setIsSeeding(true);
+    try {
+      await fetch(`${apiBaseUrl}/ingest/mock`, { method: "POST" });
+      setSeedSuccess(true);
+      setTimeout(() => setSeedSuccess(false), 3000);
+      void loadDashboard();
+    } catch {
+      // silent
+    } finally {
+      setIsSeeding(false);
+    }
+  }
+
+  async function handleSearch() {
     setIsSubmitting(true);
     setQueryError("");
     setQueryResult(null);
-
     try {
       const res = await fetch(`${apiBaseUrl}/query`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query, limit: 4 }),
       });
-
       const payload = (await res.json()) as QueryResponse | { detail?: string };
-
       if (!res.ok) {
         throw new Error(
           "detail" in payload && payload.detail
             ? payload.detail
-            : `Query failed with ${res.status}`,
+            : `Query failed: ${res.status}`,
         );
       }
-
       setQueryResult(payload as QueryResponse);
     } catch (err) {
-      setQueryResult(null);
-      setQueryError(
-        err instanceof Error
-          ? err.message
-          : "The search request failed. Check the backend and try again.",
-      );
+      setQueryError(err instanceof Error ? err.message : "Search failed.");
     } finally {
       setIsSubmitting(false);
     }
@@ -158,120 +149,107 @@ export default function Home() {
 
   const criticalCount = insights.filter((i) => i.severity === "critical").length;
   const warningCount = insights.filter((i) => i.severity === "warning").length;
-  const infoCount = insights.filter((i) => i.severity === "info").length;
 
   return (
-    <div className="min-h-screen bg-[#030712] text-white">
-      {/* Ambient background glows */}
+    <>
+      <NavBar onSeed={handleSeed} isSeeding={isSeeding} health={health} />
+
+      {/* Ambient glows */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -top-60 left-1/4 h-[700px] w-[700px] rounded-full bg-sky-500/7 blur-[140px]" />
-        <div className="absolute top-1/2 right-0 h-[500px] w-[500px] rounded-full bg-violet-500/5 blur-[120px]" />
-        <div className="absolute bottom-0 left-0 h-[400px] w-[400px] rounded-full bg-sky-400/4 blur-[100px]" />
+        <div className="absolute -top-60 left-1/4 h-[600px] w-[600px] rounded-full bg-sky-500/6 blur-[140px]" />
+        <div className="absolute top-1/2 right-0 h-[400px] w-[400px] rounded-full bg-violet-500/5 blur-[120px]" />
       </div>
 
-      <div className="relative mx-auto max-w-[1440px] px-6 py-8 lg:px-14">
-        {/* ── Header ── */}
-        <header className="mb-10 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-sky-400 to-violet-500 shadow-lg shadow-sky-500/25">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="white"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-              </svg>
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-white">Nexus OS</p>
-              <p className="text-[11px] text-slate-500">Enterprise Intelligence</p>
-            </div>
-          </div>
+      <main className="relative mx-auto w-full max-w-[1440px] px-6 py-8 lg:px-14">
+        {/* Summary bar */}
+        <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <SummaryCard
+            label="Annual SaaS spend"
+            value={`$${(totalAnnualCost / 1000).toFixed(0)}k`}
+            sub="across 6 tools"
+            accent="text-white"
+          />
+          <SummaryCard
+            label="Potential savings"
+            value={`$${((totalMonthlySavings * 12) / 1000).toFixed(0)}k/yr`}
+            sub="from optimisation"
+            accent="text-emerald-400"
+          />
+          <SummaryCard
+            label="Removal candidates"
+            value={removalCandidates.length}
+            sub="unused seats"
+            accent="text-rose-400"
+          />
+          <SummaryCard
+            label="Active signals"
+            value={insights.length || "—"}
+            sub={`${criticalCount} critical · ${warningCount} watchlist`}
+            accent="text-amber-400"
+          />
+        </div>
 
-          <div className="flex items-center gap-2">
-            <StatusPill health={health} />
-            <button
-              type="button"
-              onClick={() => void loadDashboard()}
-              className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/4 px-3 py-1.5 text-xs text-slate-400 transition hover:border-sky-400/30 hover:text-white"
+        {seedSuccess && (
+          <div className="mb-6 flex items-center gap-2.5 rounded-xl border border-emerald-400/20 bg-emerald-400/5 px-4 py-3 text-sm text-emerald-300">
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
-              <RefreshIcon spinning={isLoading} />
-              Refresh
-            </button>
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+            Mock data seeded successfully. Dashboard updated.
           </div>
-        </header>
+        )}
 
-        {/* ── Hero ── */}
-        <section className="mb-8 rounded-3xl border border-white/8 bg-gradient-to-br from-white/4 to-transparent p-8 backdrop-blur-sm lg:p-10">
-          <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-sky-400/20 bg-sky-400/8 px-3 py-1 text-[11px] text-sky-300">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-sky-400" />
-            Live workspace intelligence
-          </span>
-          <h1 className="max-w-3xl text-3xl font-semibold tracking-tight text-white sm:text-5xl leading-[1.15]">
-            Turn scattered company knowledge into{" "}
-            <span className="bg-gradient-to-r from-sky-300 via-sky-200 to-violet-300 bg-clip-text text-transparent">
-              signals your team can act on
-            </span>
-          </h1>
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-400">
-            Nexus OS ingests data from Slack, PDFs, video transcripts, and docs
-            — surfacing optimization insights and enabling semantic search
-            across your entire enterprise knowledge base.
-          </p>
-
-          {/* Stat pills */}
-          <div className="mt-8 flex flex-wrap gap-3">
-            <StatPill label="Total signals" value={insights.length} color="slate" />
-            <StatPill label="Priority" value={criticalCount} color="rose" />
-            <StatPill label="Watchlist" value={warningCount} color="amber" />
-            <StatPill label="Info" value={infoCount} color="sky" />
-            {generatedAt && (
-              <div className="flex items-center gap-2 rounded-full border border-white/8 bg-white/4 px-3 py-1.5">
-                <span className="text-[11px] text-slate-500">
-                  Last refresh: {formatTimestamp(generatedAt)}
-                </span>
-              </div>
-            )}
-          </div>
-        </section>
-
-        {/* ── Main content grid ── */}
         <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
-          {/* ── Insights feed ── */}
+          {/* Signal feed */}
           <section>
             <SectionHeader
-              title="Signals Feed"
-              subtitle={`${insights.length} active signals`}
+              title="Signals & Recommendations"
+              sub={`${insights.length} active`}
             />
 
-            {insightsError ? (
-              <ErrorCard message={insightsError} title="Backend unreachable" />
-            ) : isLoading ? (
+            {insightsError && (
+              <div className="mb-4 rounded-xl border border-amber-400/20 bg-amber-400/5 px-4 py-3 text-xs text-amber-300">
+                {insightsError}
+              </div>
+            )}
+
+            {isLoading ? (
               <div className="space-y-3">
                 {[1, 2, 3, 4].map((i) => (
                   <div
                     key={i}
-                    className="h-28 animate-pulse rounded-2xl border border-white/6 bg-white/3"
+                    className="h-24 animate-pulse rounded-2xl border border-white/6 bg-white/3"
                   />
                 ))}
               </div>
             ) : insights.length === 0 ? (
-              <EmptyState message="No signals yet. Trigger a mock ingestion from the backend to populate data." />
+              <div className="rounded-2xl border border-white/8 bg-white/3 p-10 text-center">
+                <p className="text-sm text-slate-500">No signals yet.</p>
+                <p className="mt-1 text-xs text-slate-600">
+                  Click "Seed Data" to load mock insights.
+                </p>
+              </div>
             ) : (
               <div className="space-y-2.5">
-                {insights.map((insight, idx) => {
+                {[
+                  ...insights.filter((i) => i.severity === "critical"),
+                  ...insights.filter((i) => i.severity === "warning"),
+                  ...insights.filter((i) => i.severity === "info"),
+                ].map((insight, idx) => {
                   const cfg = severityConfig[insight.severity];
                   return (
                     <article
                       key={`${insight.metric}-${idx}`}
                       className={`group relative overflow-hidden rounded-2xl border p-5 transition-all duration-200 ${cfg.card}`}
                     >
-                      {/* Severity bar */}
                       <div
                         className={`absolute left-0 top-0 h-full w-1 rounded-l-2xl ${cfg.bar}`}
                       />
@@ -302,41 +280,23 @@ export default function Home() {
             )}
           </section>
 
-          {/* ── Query workspace ── */}
+          {/* Semantic search */}
           <section>
-            <SectionHeader
-              title="Semantic Search"
-              subtitle="RAG-powered Q&A"
-            />
+            <SectionHeader title="Knowledge Search" sub="RAG · Claude AI" />
 
             <div className="rounded-2xl border border-white/8 bg-white/3 p-6 backdrop-blur-sm">
-              <div className="mb-1 flex items-center gap-2">
-                <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-gradient-to-br from-sky-400 to-violet-500">
-                  <svg
-                    width="11"
-                    height="11"
-                    viewBox="0 0 24 24"
-                    fill="white"
-                    stroke="none"
-                  >
-                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-                  </svg>
-                </div>
-                <p className="text-sm font-semibold text-white">
-                  Ask your knowledge layer
-                </p>
-              </div>
-              <p className="mb-5 text-xs text-slate-500">
-                Ask anything about your company data — powered by Claude AI
+              <p className="mb-4 text-xs text-slate-500">
+                Ask anything about your company's data — Slack, PDFs, docs, and
+                video transcripts.
               </p>
 
-              <form onSubmit={handleSubmit} className="space-y-3">
+              <form onSubmit={(e) => { e.preventDefault(); void handleSearch(); }} className="space-y-3">
                 <textarea
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  rows={4}
+                  rows={3}
                   className="w-full resize-none rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-sky-400/40 focus:bg-slate-950"
-                  placeholder="What are the biggest documentation risks across tools?"
+                  placeholder="What are the biggest documentation risks?"
                 />
                 <button
                   type="submit"
@@ -364,7 +324,7 @@ export default function Home() {
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                         />
                       </svg>
-                      Searching knowledge base…
+                      Searching…
                     </>
                   ) : (
                     <>
@@ -398,7 +358,6 @@ export default function Home() {
 
               {queryResult && (
                 <div className="mt-5 space-y-3">
-                  {/* Answer */}
                   <div className="rounded-xl border border-sky-400/15 bg-gradient-to-br from-sky-400/5 to-violet-400/3 p-4">
                     <div className="mb-3 flex items-center gap-2">
                       <div className="flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-sky-400 to-violet-400">
@@ -412,7 +371,7 @@ export default function Home() {
                         </svg>
                       </div>
                       <span className="text-[11px] font-semibold uppercase tracking-wider text-sky-300">
-                        Claude&apos;s Answer
+                        Claude's Answer
                       </span>
                     </div>
                     <p className="text-xs leading-6 text-slate-200 whitespace-pre-wrap">
@@ -420,7 +379,6 @@ export default function Home() {
                     </p>
                   </div>
 
-                  {/* Sources */}
                   {queryResult.sources.length > 0 && (
                     <div>
                       <p className="mb-2 text-[10px] font-semibold uppercase tracking-widest text-slate-500">
@@ -428,16 +386,17 @@ export default function Home() {
                       </p>
                       <div className="space-y-2">
                         {queryResult.sources.map((source) => {
-                          const src =
-                            sourceTypeConfig[source.source_type] ?? {
-                              emoji: "📁",
-                              color: "text-slate-300",
-                              label: source.source_type,
-                            };
+                          const src = sourceTypeConfig[source.source_type] ?? {
+                            emoji: "📁",
+                            color: "text-slate-300",
+                            label: source.source_type,
+                          };
                           return (
-                            <div
+                            <button
                               key={source.id}
-                              className="rounded-xl border border-white/8 bg-white/3 p-3.5"
+                              type="button"
+                              onClick={() => setSelectedSource(source)}
+                              className="w-full rounded-xl border border-white/8 bg-white/3 p-3.5 text-left transition hover:border-sky-400/20 hover:bg-sky-400/3"
                             >
                               <div className="mb-2 flex items-center justify-between gap-3">
                                 <div className="flex items-center gap-2">
@@ -453,10 +412,13 @@ export default function Home() {
                                   match
                                 </span>
                               </div>
-                              <p className="text-xs leading-5 text-slate-400">
+                              <p className="text-xs leading-5 text-slate-400 line-clamp-2">
                                 {source.snippet}
                               </p>
-                            </div>
+                              <p className="mt-1.5 text-[10px] text-sky-400/60">
+                                Click to view full source →
+                              </p>
+                            </button>
                           );
                         })}
                       </div>
@@ -468,151 +430,64 @@ export default function Home() {
           </section>
         </div>
 
-        {/* ── Footer ── */}
         <footer className="mt-12 border-t border-white/6 pt-6 text-center">
           <p className="text-[11px] text-slate-600">
-            Nexus OS · Enterprise Intelligence Layer · Connected to{" "}
+            Nexus OS · SaaS Intelligence Platform ·{" "}
             <span className="font-mono text-slate-500">
               {apiBaseUrl.replace("https://", "")}
             </span>
+            {generatedAt && (
+              <>
+                {" "}
+                · Last refresh{" "}
+                {new Intl.DateTimeFormat("en-AU", {
+                  timeStyle: "short",
+                }).format(new Date(generatedAt))}
+              </>
+            )}
           </p>
         </footer>
-      </div>
-    </div>
+      </main>
+
+      {selectedSource && (
+        <SourceDetailModal
+          source={selectedSource}
+          onClose={() => setSelectedSource(null)}
+        />
+      )}
+    </>
   );
 }
 
-/* ── Sub-components ── */
-
-function StatusPill({
-  health,
+function SummaryCard({
+  label,
+  value,
+  sub,
+  accent,
 }: {
-  health: "checking" | "healthy" | "offline";
+  label: string;
+  value: string | number;
+  sub: string;
+  accent: string;
 }) {
-  const cfg = {
-    checking: {
-      style: "bg-slate-500/10 border-slate-400/20 text-slate-400",
-      dot: "bg-slate-400 animate-pulse",
-      label: "Connecting",
-    },
-    healthy: {
-      style: "bg-emerald-500/10 border-emerald-400/20 text-emerald-300",
-      dot: "bg-emerald-400 animate-pulse",
-      label: "Live",
-    },
-    offline: {
-      style: "bg-rose-500/10 border-rose-400/20 text-rose-300",
-      dot: "bg-rose-500",
-      label: "Offline",
-    },
-  }[health];
-
   return (
-    <div
-      className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium ${cfg.style}`}
-    >
-      <span className={`h-1.5 w-1.5 rounded-full ${cfg.dot}`} />
-      Backend {cfg.label}
+    <div className="rounded-2xl border border-white/8 bg-white/3 p-4 backdrop-blur-sm">
+      <p className="text-[10px] font-medium uppercase tracking-wider text-slate-500">
+        {label}
+      </p>
+      <p className={`mt-1 text-2xl font-bold ${accent}`}>{value}</p>
+      <p className="mt-0.5 text-[11px] text-slate-600">{sub}</p>
     </div>
   );
 }
 
-function SectionHeader({
-  title,
-  subtitle,
-}: {
-  title: string;
-  subtitle?: string;
-}) {
+function SectionHeader({ title, sub }: { title: string; sub?: string }) {
   return (
     <div className="mb-4 flex items-baseline justify-between gap-4">
       <h3 className="text-[11px] font-semibold uppercase tracking-widest text-slate-400">
         {title}
       </h3>
-      {subtitle && (
-        <span className="text-[11px] text-slate-600">{subtitle}</span>
-      )}
+      {sub && <span className="text-[11px] text-slate-600">{sub}</span>}
     </div>
   );
-}
-
-function StatPill({
-  label,
-  value,
-  color,
-}: {
-  label: string;
-  value: number;
-  color: string;
-}) {
-  const colorMap: Record<string, string> = {
-    slate: "text-slate-300",
-    rose: "text-rose-300",
-    amber: "text-amber-300",
-    sky: "text-sky-300",
-  };
-  return (
-    <div className="flex items-center gap-2 rounded-full border border-white/8 bg-white/4 px-3 py-1.5">
-      <span className={`text-sm font-bold ${colorMap[color] ?? "text-white"}`}>
-        {value}
-      </span>
-      <span className="text-[11px] text-slate-500">{label}</span>
-    </div>
-  );
-}
-
-function ErrorCard({
-  title,
-  message,
-}: {
-  title: string;
-  message: string;
-}) {
-  return (
-    <div className="rounded-2xl border border-rose-400/20 bg-rose-400/5 p-5">
-      <div className="flex items-start gap-3">
-        <span className="mt-0.5 text-rose-400 text-sm">⚠</span>
-        <div>
-          <p className="text-sm font-semibold text-rose-200">{title}</p>
-          <p className="mt-1 text-xs text-rose-400/70">{message}</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function EmptyState({ message }: { message: string }) {
-  return (
-    <div className="rounded-2xl border border-white/6 bg-white/2 p-8 text-center">
-      <p className="text-sm text-slate-500">{message}</p>
-    </div>
-  );
-}
-
-function RefreshIcon({ spinning }: { spinning: boolean }) {
-  return (
-    <svg
-      width="11"
-      height="11"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={spinning ? "animate-spin" : ""}
-    >
-      <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-      <path d="M3 3v5h5" />
-      <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
-      <path d="M16 16h5v5" />
-    </svg>
-  );
-}
-
-function formatTimestamp(timestamp: string) {
-  return new Intl.DateTimeFormat("en-AU", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  }).format(new Date(timestamp));
 }

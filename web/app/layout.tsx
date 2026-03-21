@@ -14,9 +14,9 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Signal Canvas",
+  title: "Nexus OS — SaaS Intelligence",
   description:
-    "A Next.js control room for live workspace insights and semantic search.",
+    "Enterprise SaaS intelligence: track costs, usage, and feature overlap across your entire stack.",
 };
 
 export default function RootLayout({
@@ -29,7 +29,7 @@ export default function RootLayout({
       lang="en"
       className={`${spaceGrotesk.variable} ${plexMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-slate-950">{children}</body>
+      <body className="min-h-full flex flex-col bg-[#030712]">{children}</body>
     </html>
   );
 }
