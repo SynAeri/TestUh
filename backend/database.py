@@ -1,4 +1,4 @@
-Simple SQLite database setup - no migrations needed, just run and go
+# Simple SQLite database setup - no migrations needed, just run and go
 
 from sqlalchemy import create_engine, Column, String, Integer, BigInteger, Boolean, DateTime, Text, JSON
 from sqlalchemy.ext.declarative import declarative_base
@@ -43,7 +43,7 @@ class File(Base):
     keep_status = Column(String, default="unreviewed")
     category = Column(String)
     location = Column(String)
-    metadata = Column(JSON)
+    file_metadata = Column("metadata", JSON)
     created_at = Column(DateTime, default=datetime.utcnow)
 
 

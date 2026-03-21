@@ -1,4 +1,4 @@
-Simple FastAPI backend for hackathon - no auth, no complexity, just works
+# Simple FastAPI backend for hackathon - no auth, no complexity, just works
 
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
@@ -101,7 +101,7 @@ def add_file(file: FileCreate, db: Session = Depends(get_db)):
         file_hash=file.file_hash,
         category=file.category,
         location=file.location,
-        metadata=file.metadata
+        file_metadata=file.metadata
     )
     db.add(new_file)
     db.commit()
@@ -121,7 +121,7 @@ def add_files_batch(files: List[FileCreate], db: Session = Depends(get_db)):
             file_hash=file.file_hash,
             category=file.category,
             location=file.location,
-            metadata=file.metadata
+            file_metadata=file.metadata
         )
         db.add(new_file)
     db.commit()
@@ -257,9 +257,9 @@ def analyze_file(file_id: str, db: Session = Depends(get_db)):
 
     analysis = analyze_image_content(file.path)
 
-    if file.metadata is None:
-        file.metadata = {}
-    file.metadata["ai_description"] = analysis
+    if file.file_metadata is None:
+        file.file_metadata = {}
+    file.file_metadata["ai_description"] = analysis
     db.commit()
 
     return {

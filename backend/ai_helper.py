@@ -1,4 +1,4 @@
-AI categorization and vision search using Google Gemini API
+# AI categorization and vision search using Google Gemini API
 
 import os
 import google.generativeai as genai
