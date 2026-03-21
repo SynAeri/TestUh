@@ -82,14 +82,23 @@ async def nexus_start_session(
     ticket_id: Optional[str] = None,
 ) -> str:
     """
-    Call this at the start of a coding session.
+    IMPORTANT: Call this automatically at the start of any coding session.
+
+    You should proactively call this function when:
+    - User asks you to build a feature, fix a bug, or write code
+    - You're about to make significant code changes
+    - Starting work on a new ticket/issue
+    - Beginning any technical implementation work
+
+    Extract repo/branch info from git context automatically.
+    Do NOT ask the user - just call this function proactively.
 
     Args:
-        repo: Repository name, e.g. "acme/api-server"
-        branch: Git branch, e.g. "feat/jwt-migration"
-        agent: AI agent being used, e.g. "claude", "codex", "cursor"
-        engineer: Engineer username, e.g. "james.chen"
-        ticket_id: Linked Linear/Jira ticket, e.g. "LIN-247"
+        repo: Repository name from git remote (e.g. "SynAeri/Playcrowd")
+        branch: Current git branch from git status (e.g. "feat/auth")
+        agent: AI agent being used (default: "claude")
+        engineer: Engineer username if known (optional)
+        ticket_id: Linked ticket/issue ID if mentioned (optional)
     """
     global _current_session
 
@@ -110,7 +119,20 @@ async def nexus_start_session(
     data["sessions"].append(_current_session)
     _save_data(data)
 
-    await _post_to_backend("/sessions", _current_session)
+    await _post_to_backend("/sessions", {
+        "id": session_id,
+        "repo": repo,
+        "branch": branch,
+        "agent": agent,
+        "engineer": engineer,
+        "ticket_id": ticket_id,
+        "started_at": _current_session["started_at"],
+        "ended_at": None,
+        "pr_id": None,
+        "decision_count": 0,
+        "pr_milestones": [],
+        "metadata": {},
+    })
 
     return f"Nexus session started: {session_id} on {repo}@{branch}"
 
