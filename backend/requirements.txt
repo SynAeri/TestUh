@@ -8,14 +8,15 @@ python-dotenv==1.0.1
 pydantic==2.10.3
 
 # HTTP clients
-httpx<0.26,>=0.24
 requests==2.32.5
 
-# AI/LLM integration (Anthropic Claude)
-anthropic==0.39.0
+# AI/LLM integration
+anthropic==0.39.0  # Optional: Anthropic Claude
+google-generativeai==0.8.3  # Google Gemini (primary)
 
 # Database - Supabase client for AI session logging
 supabase==2.3.4
+httpx<0.26,>=0.24
 
 # Optional: Database (lightweight for hackathon MVP)
 # For production, use proper DB. For demo, can use in-memory or JSON files.

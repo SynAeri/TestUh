@@ -20,10 +20,12 @@ async def get_allowed_repos():
     """
     Returns list of repositories that are allowed to log AI sessions.
     MCP skill checks this before sending session/decision data.
+    Matching is flexible: both "Playcrowd" and "SynAeri/Playcrowd" will match.
     """
     return {
         "allowed_repos": ALLOWED_REPOS,
-        "match_mode": "contains"
+        "match_mode": "flexible",
+        "note": "Matches repo name with or without owner prefix"
     }
 
 

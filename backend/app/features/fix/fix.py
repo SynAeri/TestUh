@@ -9,7 +9,7 @@ from app.models.schemas import (
     ReviewAssignRequest,
     ReviewAssignResponse
 )
-from app.shared.data.store import store
+from app.shared.data.supabase_store import supabase_store
 from app.shared.services.ai_service import ai_service
 
 router = APIRouter(prefix="/api", tags=["fix"])
@@ -18,10 +18,11 @@ router = APIRouter(prefix="/api", tags=["fix"])
 async def draft_fix(request: FixDraftRequest):
     """
     Generate an AI-drafted fix for an incident using coding context.
+    Uses Gemini AI for analysis.
     Returns probable cause, proposed fix, and patch notes for review.
     """
     try:
-        incident = store.get_incident(request.incident_id)
+        incident = supabase_store.get_incident(request.incident_id)
         if not incident:
             raise HTTPException(status_code=404, detail=f"Incident {request.incident_id} not found")
 
@@ -30,6 +31,11 @@ async def draft_fix(request: FixDraftRequest):
                 status_code=400,
                 detail="No coding context linked to this incident. Cannot draft fix."
             )
+
+        # Log what we're sending to AI
+        print(f"[DRAFT FIX] Incident: {incident.title}")
+        print(f"[DRAFT FIX] Coding context decisions: {len(incident.coding_context.decisions)}")
+        print(f"[DRAFT FIX] Coding context assumptions: {len(incident.coding_context.assumptions)}")
 
         fix_data = ai_service.draft_fix_for_incident(incident, incident.coding_context)
 
@@ -48,7 +54,7 @@ async def draft_fix(request: FixDraftRequest):
             mock_pr_id=mock_pr_id
         )
 
-        store.save_fix(fix_response)
+        supabase_store.save_fix(fix_response)
 
         return fix_response
 
@@ -65,14 +71,14 @@ async def assign_review(request: ReviewAssignRequest):
     Updates the review state and assigns owner.
     """
     try:
-        fix = store.get_fix(request.draft_id)
+        fix = supabase_store.get_fix(request.draft_id)
         if not fix:
             raise HTTPException(status_code=404, detail=f"Draft {request.draft_id} not found")
 
         fix.reviewer = request.reviewer
         fix.review_state = "in_review"
 
-        store.save_fix(fix)
+        supabase_store.update_fix_review_state(request.draft_id, request.reviewer, "in_review")
 
         return ReviewAssignResponse(
             draft_id=request.draft_id,
