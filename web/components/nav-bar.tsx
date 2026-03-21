@@ -42,7 +42,7 @@ export default function NavBar() {
                 href={tab.href}
                 className={`relative flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
                   isActive
-                    ? "bg-stone-100 text-stone-900"
+                    ? "text-violet-700 bg-violet-50"
                     : "text-stone-500 hover:text-stone-700 hover:bg-stone-50"
                 }`}
               >

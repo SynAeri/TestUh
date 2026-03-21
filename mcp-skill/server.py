@@ -236,7 +236,20 @@ async def nexus_start_session(
     _save_data(data)
 
     if _is_repo_allowed(repo):
-        await _post_to_backend("/sessions", _current_session)
+        await _post_to_backend("/sessions", {
+            "id": session_id,
+            "repo": repo,
+            "branch": branch,
+            "agent": agent,
+            "engineer": engineer,
+            "ticket_id": ticket_id,
+            "started_at": _current_session["started_at"],
+            "ended_at": None,
+            "pr_id": None,
+            "decision_count": 0,
+            "pr_milestones": [],
+            "metadata": {},
+        })
         return (
             f"Session tracking started: {session_id}\n"
             f"Repository: {repo}@{branch}\n"
@@ -297,6 +310,7 @@ async def nexus_log_decision(
         "ticket_id": ticket_id or _current_session.get("ticket_id"),
         "timestamp": _now(),
         "pr_milestone": _get_pr_milestone_context(),
+        "metadata": {},
     }
 
     data = _load_data()

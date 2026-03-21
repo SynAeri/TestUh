@@ -12,6 +12,72 @@
       "decision_ids": [
         "dec_8f7198bc"
       ]
+    },
+    {
+      "id": "sess_285e88f8",
+      "repo": "SynAeri/TestUh",
+      "branch": "anusha_s",
+      "agent": "claude",
+      "engineer": "anusha",
+      "ticket_id": null,
+      "started_at": "2026-03-21T16:02:18.621120+00:00",
+      "ended_at": null,
+      "decision_ids": []
+    },
+    {
+      "id": "sess_a69c0fc5",
+      "repo": "SynAeri/TestUh",
+      "branch": "anusha_s",
+      "agent": "claude",
+      "engineer": "anusha",
+      "ticket_id": null,
+      "started_at": "2026-03-21T16:02:19.480442+00:00",
+      "ended_at": null,
+      "decision_ids": []
+    },
+    {
+      "id": "sess_8d63fd60",
+      "repo": "SynAeri/TestUh",
+      "branch": "anusha_s",
+      "agent": "claude",
+      "engineer": "anusha",
+      "ticket_id": null,
+      "started_at": "2026-03-21T16:45:27.383286+00:00",
+      "ended_at": null,
+      "decision_ids": []
+    },
+    {
+      "id": "sess_7731d13a",
+      "repo": "SynAeri/TestUh",
+      "branch": "anusha_s",
+      "agent": "claude",
+      "engineer": "anusha",
+      "ticket_id": null,
+      "started_at": "2026-03-21T16:45:28.083192+00:00",
+      "ended_at": null,
+      "decision_ids": []
+    },
+    {
+      "id": "sess_05bc402c",
+      "repo": "SynAeri/TestUh",
+      "branch": "anusha_s",
+      "agent": "claude",
+      "engineer": "anusha",
+      "ticket_id": null,
+      "started_at": "2026-03-21T23:31:14.766720+00:00",
+      "ended_at": null,
+      "decision_ids": []
+    },
+    {
+      "id": "sess_cb55e2b6",
+      "repo": "SynAeri/TestUh",
+      "branch": "anusha_s",
+      "agent": "claude",
+      "engineer": "anusha",
+      "ticket_id": null,
+      "started_at": "2026-03-21T23:31:15.752185+00:00",
+      "ended_at": null,
+      "decision_ids": []
     }
   ],
   "decisions": [

@@ -32,9 +32,10 @@ function SessionCard({ session, index }: { session: AISession; index: number }) 
   );
   return (
     <div
-      className="fade-up rounded-2xl border border-stone-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
+      className="fade-up relative overflow-hidden rounded-2xl border border-stone-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
       style={{ animationDelay: `${index * 80}ms` }}
     >
+      <div className="absolute left-0 top-0 h-full w-1 rounded-l-2xl bg-gradient-to-b from-violet-400 to-sky-400" />
       <div className="mb-3 flex items-start justify-between gap-3">
         <div className="flex items-center gap-2.5">
           <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-100 to-sky-100 text-[10px] font-bold text-stone-600 border border-stone-200">
@@ -220,19 +221,34 @@ export default function OverviewPage() {
     <>
       <NavBar />
       <main className="mx-auto w-full max-w-[1400px] px-6 py-8 lg:px-10">
+        {/* Hero */}
+        <div className="mb-8 rounded-2xl border border-violet-100 bg-gradient-to-r from-violet-50 via-white to-sky-50 px-6 py-5 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-lg font-bold text-stone-900">Decision Intelligence</h1>
+              <p className="mt-0.5 text-sm text-stone-500">Capturing AI coding context · linking decisions to incidents</p>
+            </div>
+            <div className="hidden sm:flex items-center gap-2 rounded-full border border-violet-200 bg-white px-3 py-1.5 text-xs font-medium text-violet-600 shadow-sm">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-violet-500" />
+              MCP skill active
+            </div>
+          </div>
+        </div>
+
         {/* Metric strip */}
         <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
           {[
-            { label: "Sessions captured", value: MOCK_SESSIONS.length, accent: "text-stone-900", sub: "today" },
-            { label: "Decisions logged", value: 4, accent: "text-violet-600", sub: "with full reasoning" },
-            { label: "Integrations", value: 3, accent: "text-sky-600", sub: "connected" },
-            { label: "Active incidents", value: incident ? 1 : 0, accent: incident ? "text-rose-600" : "text-emerald-600", sub: incident ? "needs attention" : "all clear" },
+            { label: "Sessions captured", value: MOCK_SESSIONS.length, accent: "text-stone-900", sub: "today", icon: "🧠", iconBg: "bg-stone-100 border-stone-200" },
+            { label: "Decisions logged", value: 4, accent: "text-violet-600", sub: "with full reasoning", icon: "⚡", iconBg: "bg-violet-50 border-violet-200" },
+            { label: "Integrations", value: 3, accent: "text-sky-600", sub: "connected", icon: "🔗", iconBg: "bg-sky-50 border-sky-200" },
+            { label: "Active incidents", value: incident ? 1 : 0, accent: incident ? "text-rose-600" : "text-emerald-600", sub: incident ? "needs attention" : "all clear", icon: incident ? "🔴" : "✅", iconBg: incident ? "bg-rose-50 border-rose-200" : "bg-emerald-50 border-emerald-200" },
           ].map((s, i) => (
             <div
               key={s.label}
-              className="fade-up rounded-2xl border border-stone-200 bg-white p-4 shadow-sm"
+              className="fade-up rounded-2xl border border-stone-200 bg-white p-4 shadow-sm hover:shadow-md transition-shadow"
               style={{ animationDelay: `${i * 60}ms` }}
             >
+              <div className={`mb-2.5 inline-flex h-8 w-8 items-center justify-center rounded-xl border text-sm ${s.iconBg}`}>{s.icon}</div>
               <p className="text-[10px] font-medium uppercase tracking-wider text-stone-400">{s.label}</p>
               <p className={`mt-1 text-2xl font-bold ${s.accent}`}>{s.value}</p>
               <p className="mt-0.5 text-[11px] text-stone-400">{s.sub}</p>
