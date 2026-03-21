@@ -8,7 +8,8 @@ from app.config.supabase import get_supabase_client
 from app.models.schemas import SourceCitation
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
+MODEL_NAME = "gemini-2.5-flash" 
+GEMINI_API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL_NAME}:generateContent"
 
 def generate_query_embedding(query: str) -> List[float]:
     import random
