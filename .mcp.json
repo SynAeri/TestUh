@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "nexus": {
+      "command": "python3",
+      "args": ["/Users/anushasubedi/Desktop/foundersHackathon/TestUh/mcp-skill/server.py"]
+    }
+  }
+}
