@@ -67,6 +67,7 @@ async def log_decision(decision: AIDecision):
             "files_changed": decision.files_changed,
             "ticket_id": decision.ticket_id,
             "timestamp": decision.timestamp,
+            "pr_milestone": decision.pr_milestone,
             "metadata": decision.metadata or {}
         }).execute()
 
@@ -223,4 +224,66 @@ async def list_decisions(session_id: str = None, impact: str = None):
         raise HTTPException(
             status_code=500,
             detail=f"Failed to list decisions: {str(e)}"
+        )
+
+
+@router.get("/sessions/{session_id}/pr-timeline", response_model=dict)
+async def get_session_pr_timeline(session_id: str):
+    """
+    Get session decisions grouped by PR milestones.
+    Shows which decisions were made before/after each PR.
+    """
+    try:
+        supabase = get_supabase_client()
+
+        session_result = supabase.table("ai_sessions").select("*").eq("id", session_id).execute()
+
+        if not session_result.data:
+            raise HTTPException(status_code=404, detail=f"Session {session_id} not found")
+
+        session = session_result.data[0]
+        pr_milestones = session.get("pr_milestones", [])
+
+        decisions_result = supabase.table("ai_decisions").select("*").eq("session_id", session_id).order("timestamp").execute()
+
+        timeline = {
+            "session_id": session_id,
+            "repo": session.get("repo"),
+            "branch": session.get("branch"),
+            "pr_milestones": pr_milestones,
+            "decisions_by_phase": {}
+        }
+
+        decisions_before_any_pr = []
+        decisions_by_pr = {}
+
+        for decision in decisions_result.data:
+            pr_milestone = decision.get("pr_milestone")
+
+            if not pr_milestone:
+                decisions_before_any_pr.append(decision)
+            else:
+                pr_id = pr_milestone.get("pr_id")
+                created_before = pr_milestone.get("created_before_pr", False)
+
+                phase_key = f"pr_{pr_id}_{'before' if created_before else 'after'}"
+
+                if phase_key not in decisions_by_pr:
+                    decisions_by_pr[phase_key] = []
+
+                decisions_by_pr[phase_key].append(decision)
+
+        if decisions_before_any_pr:
+            timeline["decisions_by_phase"]["before_any_pr"] = decisions_before_any_pr
+
+        timeline["decisions_by_phase"].update(decisions_by_pr)
+
+        return timeline
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to get PR timeline: {str(e)}"
         )
