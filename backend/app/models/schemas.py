@@ -38,7 +38,7 @@ class PRMock(BaseModel):
     """Mock Pull Request object"""
     pr_id: str
     title: str
-    description: str
+    description: Optional[str] = None
     author: str
     commit_sha: str
     files_changed: List[str]

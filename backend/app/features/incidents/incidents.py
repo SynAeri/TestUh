@@ -9,7 +9,7 @@ from app.models.schemas import (
     IncidentResponse,
     IncidentDetail
 )
-from app.shared.data.store import store
+from app.shared.data.supabase_store import supabase_store
 
 router = APIRouter(prefix="/api/incidents", tags=["incidents"])
 
@@ -22,7 +22,7 @@ async def trigger_incident(request: IncidentTriggerRequest):
     try:
         incident_id = f"INC-{datetime.utcnow().strftime('%Y-%m-%d')}-{uuid4().hex[:6]}"
 
-        deployment = store.get_deployment(request.linked_deployment_id)
+        deployment = supabase_store.get_deployment(request.linked_deployment_id)
         if not deployment:
             raise HTTPException(
                 status_code=404,
@@ -33,16 +33,32 @@ async def trigger_incident(request: IncidentTriggerRequest):
         ticket_id = None
         context_id = None
 
-        for ctx_id, ctx in store.contexts.items():
-            if ctx.linked_deployment_id == request.linked_deployment_id:
-                context_id = ctx_id
-                pr_id = ctx.linked_pr_id
-                ticket_id = ctx.linked_ticket_id
-                break
-
-        pr = store.get_pr(pr_id) if pr_id else None
-        ticket = store.get_ticket(ticket_id) if ticket_id else None
-        context = store.get_context(context_id) if context_id else None
+        # Get PR and context from deployment via Supabase
+        pr = None
+        context = None
+        if deployment:
+            try:
+                # Find PR by commit SHA
+                pr_result = supabase_store.client.table("pull_requests").select("*").eq("commit_sha", deployment.commit_sha).execute()
+                if pr_result.data:
+                    pr_data = pr_result.data[0]
+                    from app.models.schemas import PRMock
+                    pr = PRMock(
+                        pr_id=pr_data['pr_id'],
+                        title=pr_data['title'],
+                        description=pr_data.get('description', ''),
+                        author=pr_data['author'],
+                        commit_sha=pr_data['commit_sha'],
+                        status=pr_data['status'],
+                        created_at=datetime.fromisoformat(pr_data['created_at'].replace('Z', '+00:00')),
+                        merged_at=datetime.fromisoformat(pr_data['merged_at'].replace('Z', '+00:00')) if pr_data.get('merged_at') else None,
+                        files_changed=pr_data.get('files_changed', [])
+                    )
+                    # Get session context
+                    if pr_data.get('session_id'):
+                        context = supabase_store.get_session_context(pr_data['session_id'])
+            except Exception as e:
+                print(f"Error linking PR/session: {e}")
 
         incident = IncidentDetail(
             incident_id=incident_id,
@@ -54,11 +70,10 @@ async def trigger_incident(request: IncidentTriggerRequest):
             created_at=datetime.utcnow(),
             deployment=deployment,
             related_pr=pr,
-            related_ticket=ticket,
             coding_context=context
         )
 
-        store.save_incident(incident)
+        supabase_store.save_incident(incident)
 
         app_link = f"/incident/{incident_id}"
         slack_link = f"slack://channel?id=C123&message=Incident+{incident_id}+triggered"
@@ -82,7 +97,7 @@ async def get_incident(incident_id: str):
     Retrieve full incident details with all linked artifacts:
     deployment, PR, ticket, and coding context.
     """
-    incident = store.get_incident(incident_id)
+    incident = supabase_store.get_incident(incident_id)
 
     if not incident:
         raise HTTPException(status_code=404, detail=f"Incident {incident_id} not found")
@@ -93,4 +108,4 @@ async def get_incident(incident_id: str):
 @router.get("", response_model=list[IncidentDetail])
 async def list_incidents():
     """List all incidents in the system"""
-    return list(store.incidents.values())
+    return supabase_store.list_incidents()

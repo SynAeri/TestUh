@@ -12,6 +12,60 @@
       "decision_ids": [
         "dec_8f7198bc"
       ]
+    },
+    {
+      "id": "sess_6328e349",
+      "repo": "SynAeri/Playcrowd",
+      "branch": "main",
+      "agent": "claude",
+      "engineer": "jordanm",
+      "ticket_id": null,
+      "started_at": "2026-03-21T15:57:00.641840+00:00",
+      "ended_at": null,
+      "decision_ids": [
+        "dec_2affd8ee",
+        "dec_e1953ca9"
+      ]
+    },
+    {
+      "id": "sess_8d73e069",
+      "repo": "SynAeri/Playcrowd",
+      "branch": "jordan",
+      "agent": "claude",
+      "engineer": null,
+      "ticket_id": null,
+      "started_at": "2026-03-21T16:20:30.489321+00:00",
+      "ended_at": null,
+      "decision_ids": [
+        "dec_d0dd6eff",
+        "dec_3f2144d9"
+      ]
+    },
+    {
+      "id": "sess_ca7180e0",
+      "repo": "PlayCrowd",
+      "branch": "jordan",
+      "agent": "claude",
+      "engineer": null,
+      "ticket_id": null,
+      "started_at": "2026-03-21T16:58:50.354243+00:00",
+      "ended_at": null,
+      "decision_ids": [
+        "dec_3b08e10b"
+      ]
+    },
+    {
+      "id": "sess_ffff94f2",
+      "repo": "SynAeri/Playcrowd",
+      "branch": "jordan",
+      "agent": "claude",
+      "engineer": null,
+      "ticket_id": null,
+      "started_at": "2026-03-21T18:41:48.003317+00:00",
+      "ended_at": null,
+      "decision_ids": [
+        "dec_c3b63c9f"
+      ]
     }
   ],
   "decisions": [
@@ -24,6 +78,95 @@
       "files_changed": [],
       "ticket_id": null,
       "timestamp": "2026-03-21T15:17:51.289875+00:00",
+      "pr_milestone": null
+    },
+    {
+      "id": "dec_2affd8ee",
+      "session_id": "sess_6328e349",
+      "summary": "Built retro liminal website with Next.js, TypeScript, and abstract non-conventional design",
+      "reasoning": "Created a liminal space aesthetic website using Next.js App Router with TypeScript for type safety and modern React patterns. Chose to implement abstract, non-conventional design with CSS animations for floating shapes, glitch effects, scanlines, and a constantly rotating Teto pear SVG component. Used pure CSS instead of animation libraries to maintain the retro aesthetic and reduce dependencies. Component structure separates the Teto pear into its own client component while keeping the main page server-rendered for performance.",
+      "impact": "high",
+      "files_changed": [
+        "app/page.tsx",
+        "app/components/TetoPear.tsx",
+        "app/styles.css",
+        "app/layout.tsx",
+        "package.json",
+        "tsconfig.json",
+        "next.config.ts"
+      ],
+      "ticket_id": null,
+      "timestamp": "2026-03-21T15:57:13.428751+00:00",
+      "pr_milestone": null
+    },
+    {
+      "id": "dec_e1953ca9",
+      "session_id": "sess_6328e349",
+      "summary": "Redesigned website to match vintage liminal corridor aesthetic with yellow/orange tones",
+      "reasoning": "Updated the entire color scheme from blue to vintage yellow/orange/brown tones to match the reference image (1.webp) showing a classic liminal space corridor. Replaced custom SVG pear with user-provided Teto pear GIF. Added vintage photo effects including film grain animation, motion blur, vignette overlay, and blur filters throughout to create an authentic retro camera aesthetic. These changes transform the design from a modern abstract look to a nostalgic, eerie liminal space experience.",
+      "impact": "high",
+      "files_changed": [
+        "app/components/TetoPear.tsx",
+        "app/styles.css"
+      ],
+      "ticket_id": null,
+      "timestamp": "2026-03-21T16:07:53.205783+00:00",
+      "pr_milestone": null
+    },
+    {
+      "id": "dec_d0dd6eff",
+      "session_id": "sess_8d73e069",
+      "summary": "Reduced text intensity for better visual balance",
+      "reasoning": "User requested less intensive text. Reduced font size from 4rem to 2.5rem, lowered base opacity from 0.15 to 0.08, changed font-weight from bold to normal, increased blur from 0.5px to 0.8px, slowed glitch animation from 3s to 5s, and reduced glitch effect peak opacities from 0.6/0.7 to 0.25/0.3 with softer text-shadows.",
+      "impact": "medium",
+      "files_changed": [
+        "app/styles.css"
+      ],
+      "ticket_id": null,
+      "timestamp": "2026-03-21T16:22:16.325963+00:00",
+      "pr_milestone": null
+    },
+    {
+      "id": "dec_3f2144d9",
+      "session_id": "sess_8d73e069",
+      "summary": "Increased pear rotation speed for more dynamic effect",
+      "reasoning": "User requested faster spinning pear. Changed rotation animation duration from 8s to 3s, making the pear spin approximately 2.7x faster for a more energetic visual effect.",
+      "impact": "low",
+      "files_changed": [
+        "app/styles.css"
+      ],
+      "ticket_id": null,
+      "timestamp": "2026-03-21T16:56:08.859606+00:00",
+      "pr_milestone": null
+    },
+    {
+      "id": "dec_3b08e10b",
+      "session_id": "sess_ca7180e0",
+      "summary": "Added Framer Motion for interactive animations and navigation",
+      "reasoning": "Implemented Framer Motion to enhance the liminal space website with interactive elements. Created a navigation bar with animated buttons at the top, added hover/tap interactions to the Teto pear component with particle effects, and made all text elements and shapes interactive with smooth animations. This significantly improves user engagement while maintaining the retro aesthetic.",
+      "impact": "high",
+      "files_changed": [
+        "app/page.tsx",
+        "app/components/TetoPear.tsx",
+        "app/components/Navigation.tsx",
+        "app/styles.css",
+        "package.json"
+      ],
+      "ticket_id": null,
+      "timestamp": "2026-03-21T17:03:17.170927+00:00",
+      "pr_milestone": null
+    },
+    {
+      "id": "dec_c3b63c9f",
+      "session_id": "sess_ffff94f2",
+      "summary": "Use hue-rotate filter for color cycling on click",
+      "reasoning": "Implemented color changing on click using CSS hue-rotate filter with 6 color values (0\u00b0, 60\u00b0, 120\u00b0, 180\u00b0, 240\u00b0, 300\u00b0) cycling through the color spectrum. This approach preserves the existing animations and drop-shadow effects while allowing smooth color transitions.",
+      "impact": "medium",
+      "files_changed": [
+        "app/components/TetoPear.tsx"
+      ],
+      "ticket_id": null,
+      "timestamp": "2026-03-21T18:43:04.382098+00:00",
       "pr_milestone": null
     }
   ]

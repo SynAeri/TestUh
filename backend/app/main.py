@@ -13,6 +13,7 @@ from app.features.fix import fix
 from app.features.ai_sessions import ai_sessions
 from app.features.config import config
 from app.features.webhooks import github
+from app.features.monitoring import monitoring
 from app.shared.data.seed import seed_golden_road_data
 
 app = FastAPI(
@@ -36,11 +37,15 @@ app.include_router(fix.router)
 app.include_router(ai_sessions.router)
 app.include_router(config.router)
 app.include_router(github.router)
+app.include_router(monitoring.router)
 
 @app.on_event("startup")
 async def startup_event():
     """Seed demo data on startup"""
-    seed_golden_road_data()
+    try:
+        seed_golden_road_data()
+    except Exception as e:
+        print(f"Warning: Failed to seed data: {e}")
 
 @app.get("/")
 async def root():
@@ -67,7 +72,10 @@ async def root():
             "GET /config/allowed-repos - Get allowed repos for MCP skill",
             "GET /config/status - Get MCP configuration status",
             "POST /webhooks/github - GitHub webhook for PR events",
-            "GET /webhooks/github/test - Test webhook endpoint"
+            "GET /webhooks/github/test - Test webhook endpoint",
+            "POST /api/monitoring/error - Log error event (auto-creates incidents)",
+            "POST /api/monitoring/deploy - Log deployment (auto-links to PRs)",
+            "GET /api/monitoring/health/{service_name} - Get service health status"
         ]
     }
 

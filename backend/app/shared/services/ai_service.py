@@ -1,20 +1,48 @@
 # AI service for context summarization and fix drafting
-# Uses Anthropic Claude API to process coding transcripts and generate incident fixes
+# Uses Anthropic Claude API for incident analysis (Google Gemini optional)
 
 import os
 from typing import Dict, Any
-from anthropic import Anthropic
 from app.models.schemas import CodingContextSummary, IncidentDetail
+
+# Try to import Google Gemini, but make it optional
+try:
+    import google.generativeai as genai
+    GEMINI_AVAILABLE = True
+except ImportError:
+    GEMINI_AVAILABLE = False
+    genai = None
 
 class AIService:
     """Handles all LLM interactions for the incident response platform"""
 
     def __init__(self):
-        api_key = os.getenv("ANTHROPIC_API_KEY")
-        self.use_mock = not api_key
-        if not self.use_mock:
-            self.client = Anthropic(api_key=api_key)
-            self.model = "claude-3-5-sonnet-20241022"
+        # Check for Gemini API key first (preferred for this project)
+        gemini_key = os.getenv("GEMINI_API_KEY")
+        anthropic_key = os.getenv("ANTHROPIC_API_KEY")
+
+        if gemini_key and GEMINI_AVAILABLE:
+            self.use_mock = False
+            self.use_anthropic = False
+            genai.configure(api_key=gemini_key)
+            self.model = genai.GenerativeModel('models/gemini-2.5-flash')
+            self.client = self.model
+            print("AI Service: Using Google Gemini (gemini-2.5-flash)")
+        elif anthropic_key:
+            self.use_mock = False
+            self.use_anthropic = True
+            try:
+                from anthropic import Anthropic
+                self.client = Anthropic(api_key=anthropic_key)
+                print("AI Service: Using Anthropic Claude")
+            except (ImportError, Exception) as e:
+                print(f"Warning: Anthropic initialization failed ({e}), using mock responses")
+                self.use_mock = True
+                self.use_anthropic = False
+        else:
+            print("Warning: No API keys found or libraries missing, using mock AI responses")
+            self.use_mock = True
+            self.use_anthropic = False
 
     def summarize_coding_transcript(self, transcript: str) -> CodingContextSummary:
         """
@@ -51,17 +79,27 @@ Respond in JSON format with these exact keys:
 }}
 """
 
-        response = self.client.messages.create(
-            model=self.model,
-            max_tokens=2000,
-            messages=[{"role": "user", "content": prompt}]
-        )
-
         import json
-        content = response.content[0].text
+
+        if self.use_anthropic:
+            response = self.client.messages.create(
+                model="claude-3-5-sonnet-20240620",
+                max_tokens=2000,
+                messages=[{"role": "user", "content": prompt}]
+            )
+            content = response.content[0].text
+        else:
+            response = self.model.generate_content(prompt)
+            content = response.text
 
         try:
-            data = json.loads(content)
+            json_start = content.find('{')
+            json_end = content.rfind('}') + 1
+            if json_start >= 0 and json_end > json_start:
+                json_str = content[json_start:json_end]
+                data = json.loads(json_str)
+            else:
+                data = json.loads(content)
             return CodingContextSummary(**data)
         except Exception as e:
             return CodingContextSummary(
@@ -79,8 +117,15 @@ Respond in JSON format with these exact keys:
     ) -> Dict[str, Any]:
         """
         Analyzes an incident with coding context and drafts a probable fix.
+        Uses Gemini AI for intelligent analysis.
         Returns: Dict with analysis, probable_cause, proposed_fix, and patch_notes
         """
+        print(f"[AI SERVICE] Using {'Mock' if self.use_mock else ('Anthropic' if self.use_anthropic else 'Gemini')} for fix analysis")
+        print(f"[AI SERVICE] Incident: {incident.title}")
+        print(f"[AI SERVICE] Context summary: {context.summary[:100]}...")
+        print(f"[AI SERVICE] Decisions: {context.decisions}")
+        print(f"[AI SERVICE] Assumptions: {context.assumptions}")
+
         if self.use_mock:
             return {
                 "analysis": f"Mock analysis: The incident '{incident.title}' appears to be related to assumptions made in {context.summary}. The timeout configuration may be too aggressive.",
@@ -121,17 +166,27 @@ Respond in JSON format:
 }}
 """
 
-        response = self.client.messages.create(
-            model=self.model,
-            max_tokens=2000,
-            messages=[{"role": "user", "content": prompt}]
-        )
-
         import json
-        content = response.content[0].text
+
+        if self.use_anthropic:
+            response = self.client.messages.create(
+                model="claude-3-5-sonnet-20240620",
+                max_tokens=2000,
+                messages=[{"role": "user", "content": prompt}]
+            )
+            content = response.content[0].text
+        else:
+            response = self.model.generate_content(prompt)
+            content = response.text
 
         try:
-            return json.loads(content)
+            json_start = content.find('{')
+            json_end = content.rfind('}') + 1
+            if json_start >= 0 and json_end > json_start:
+                json_str = content[json_start:json_end]
+                return json.loads(json_str)
+            else:
+                return json.loads(content)
         except Exception:
             return {
                 "analysis": content,
