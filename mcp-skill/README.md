@@ -4,45 +4,46 @@ Automatically logs AI coding sessions, decisions, and transcripts for incident a
 
 ## Installation
 
-### 1. Install Dependencies
+### 1. Copy `mcp-skill/` folder to your project root
 
 ```bash
-cd mcp-skill
+# Example: Copy to Playcrowd project
+cp -r mcp-skill /path/to/your/project/
+```
+
+### 2. Install Dependencies
+
+```bash
+cd /path/to/your/project/mcp-skill
 pip install -r requirements.txt
 ```
 
-### 2. Add to Global Claude MCP Config
+### 3. Create `.mcp.json` in project root
 
-Add this to `~/.config/claude/mcp.json`:
+Create a `.mcp.json` file in your project root (NOT inside mcp-skill folder):
 
-```json
+```bash
+cd /path/to/your/project  # Go back to project root
+cat > .mcp.json << 'EOF'
 {
   "mcpServers": {
     "nexus": {
-      "command": "python",
-      "args": ["/absolute/path/to/mcp-skill/server.py"],
+      "command": "python3",
+      "args": ["./mcp-skill/server.py"],
       "env": {
         "NEXUS_API_URL": "https://unflattering-elinor-distinctively.ngrok-free.dev"
       }
     }
   }
 }
+EOF
 ```
 
-● MCP Config Location by OS:
+**Important:**
+- Path `./mcp-skill/server.py` is relative to project root
+- On Windows, use `python` instead of `python3`
 
-  macOS:
-  ~/Library/Application Support/Claude/claude_desktop_config.json
-
-  Windows:
-  %APPDATA%\Claude\claude_desktop_config.json
-
-  Linux:
-  ~/.config/claude/mcp.json
-
-**Replace `/absolute/path/to/mcp-skill/server.py`** with the actual absolute path to `server.py`.
-
-### 3. Restart Claude Code
+### 4. Restart Claude Code
 
 ```bash
 claude
@@ -50,22 +51,44 @@ claude
 
 Approve the "nexus" server when prompted.
 
+## Project Structure
+
+Your project should look like:
+
+```
+your-project/
+├── .mcp.json              ← Create this file
+├── mcp-skill/             ← Copy this folder here
+│   ├── server.py
+│   ├── requirements.txt
+│   └── sessions.json
+└── ... (your code)
+```
+
 ## Usage
 
 Claude automatically has access to these tools:
 
 - `nexus_start_session()` - Start tracking a coding session
 - `nexus_log_message()` - Log individual messages
-- `nexus_log_exchange()` - Log user+assistant exchange
+- `nexus_log_exchange()` - Log user+assistant exchange (recommended)
 - `nexus_log_decision()` - Log technical decisions
 - `nexus_end_session()` - End session
 
 Claude should call these automatically when relevant.
 
-## Configuration
+## Troubleshooting
 
-To use a different backend, change `NEXUS_API_URL` in your MCP config.
+**Server not connecting?**
+- Check that `python3` is installed: `python3 --version`
+- On Windows, change `python3` to `python` in `.mcp.json`
+- Verify the path to `server.py` is correct
+
+**No transcripts being saved?**
+- Make sure `NEXUS_API_URL` is set in `.mcp.json`
+- Check backend: `curl https://unflattering-elinor-distinctively.ngrok-free.dev/sessions`
+- Check `mcp-skill/sessions.json` for local logs
 
 ## Uninstall
 
-Remove the "nexus" entry from `~/.config/claude/mcp.json`.
+Delete `.mcp.json` from your project root and restart Claude Code.
