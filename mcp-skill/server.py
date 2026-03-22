@@ -67,7 +67,7 @@ NEXUS_API_URL = os.getenv("NEXUS_API_URL", "https://unflattering-elinor-distinct
 ALLOWED_REPOS = os.getenv("NEXUS_ALLOWED_REPOS", "").split(",") if os.getenv("NEXUS_ALLOWED_REPOS") else []
 DATA_FILE = Path(__file__).parent / "sessions.json"
 
-mcp = FastMCP("nexus-skill")
+mcp = FastMCP("new-feature")
 
 # ── In-memory state ───────────────────────────────────────────────────────────
 
