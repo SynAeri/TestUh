@@ -95,15 +95,18 @@
       "transcript_ids": []
     },
     {
-      "id": "sess_0775fe3a",
+      "id": "sess_470fa676",
       "repo": "SynAeri/Playcrowd",
-      "branch": "jordan",
+      "branch": "anusha",
       "agent": "claude",
       "engineer": null,
       "ticket_id": null,
-      "started_at": "2026-03-22T07:33:36.212638+00:00",
+      "started_at": "2026-03-22T09:25:23.287550+00:00",
       "ended_at": null,
-      "decision_ids": [],
+      "decision_ids": [
+        "dec_afaa4762",
+        "dec_de11628b"
+      ],
       "transcript_ids": []
     }
   ],
@@ -232,6 +235,32 @@
       ],
       "ticket_id": null,
       "timestamp": "2026-03-22T04:39:15.770755+00:00",
+      "pr_milestone": null
+    },
+    {
+      "id": "dec_afaa4762",
+      "session_id": "sess_470fa676",
+      "summary": "Added 3 Teto pear characters to page.tsx",
+      "reasoning": "User requested tripling the Teto character. Added 3 TetoPear instances: bottom-right (original), bottom-left, and bottom-center using fixed positioning.",
+      "impact": "low",
+      "files_changed": [
+        "app/page.tsx"
+      ],
+      "ticket_id": null,
+      "timestamp": "2026-03-22T09:25:31.269489+00:00",
+      "pr_milestone": null
+    },
+    {
+      "id": "dec_de11628b",
+      "session_id": "sess_470fa676",
+      "summary": "Reverted Teto pears back to single character",
+      "reasoning": "User decided to go back to one Teto character instead of three.",
+      "impact": "low",
+      "files_changed": [
+        "app/page.tsx"
+      ],
+      "ticket_id": null,
+      "timestamp": "2026-03-22T09:26:16.438523+00:00",
       "pr_milestone": null
     }
   ]
