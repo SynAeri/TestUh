@@ -196,4 +196,165 @@ Respond in JSON format:
             }
 
 
+    def analyze_incident_with_full_context(
+        self,
+        incident: IncidentDetail,
+        session: dict,
+        decisions: list,
+        transcripts: list,
+        pr: dict,
+        deployment: dict
+    ) -> Dict[str, Any]:
+        """
+        Deep incident analysis using all available context including transcripts.
+
+        This is more comprehensive than draft_fix_for_incident because it:
+        - Includes full conversation transcripts
+        - Analyzes decision timestamps relative to incident
+        - Identifies risky assumptions
+        - Suggests specific file changes
+        - Recommends best reviewer based on authorship
+
+        Returns structured analysis for storage in ai_analyses table.
+        """
+        print(f"[AI SERVICE] Deep analysis for incident: {incident.incident_id}")
+        print(f"[AI SERVICE] Decisions: {len(decisions)}, Transcripts: {len(transcripts)}")
+
+        if self.use_mock:
+            return {
+                "likely_cause": f"Mock: {incident.title} likely caused by assumption in session {session.get('id', 'unknown')}",
+                "risky_assumptions": ["Mock assumption 1", "Mock assumption 2"],
+                "suggested_fix": f"Mock: Review files {', '.join(pr.get('files_changed', [])[:3])}",
+                "recommended_reviewer": pr.get('author', 'team')
+            }
+
+        # Build comprehensive prompt with all context
+        high_impact_decisions = [d for d in decisions if d.get('impact') == 'high']
+
+        prompt = f"""You are an expert incident responder analyzing a production issue.
+
+INCIDENT DETAILS:
+- ID: {incident.incident_id}
+- Title: {incident.title}
+- Symptoms: {incident.symptoms}
+- Service: {incident.impacted_service}
+- Severity: {incident.severity}
+- Occurred: {incident.created_at}
+
+RELATED PULL REQUEST:
+- PR #{pr.get('pr_id', 'unknown')}
+- Title: {pr.get('title', 'N/A')}
+- Author: {pr.get('author', 'unknown')}
+- Merged: {pr.get('merged_at', 'N/A')}
+- Files Changed: {', '.join(pr.get('files_changed', [])[:10])}
+
+DEPLOYMENT CONTEXT:
+- Environment: {deployment.get('environment', 'unknown')}
+- Deployed by: {deployment.get('deployed_by', 'unknown')}
+- Deployed at: {deployment.get('timestamp', 'N/A')}
+- Commit SHA: {deployment.get('commit_sha', 'N/A')}
+
+AI CODING SESSION:
+- Repo: {session.get('repo', 'unknown')}
+- Branch: {session.get('branch', 'unknown')}
+- Engineer: {session.get('engineer', 'unknown')}
+- Session: {session.get('started_at', 'N/A')} to {session.get('ended_at', 'N/A')}
+
+KEY DECISIONS MADE (chronological):
+{self._format_decisions(decisions[:10])}
+
+HIGH-IMPACT DECISIONS:
+{self._format_high_impact_decisions(high_impact_decisions)}
+
+CONVERSATION EXCERPTS (last 10 exchanges):
+{self._format_transcripts(transcripts[-10:] if len(transcripts) > 10 else transcripts)}
+
+TASK:
+Analyze this incident and provide:
+
+1. **Likely Root Cause** - What specific decision or assumption caused this?
+2. **Risky Assumptions** - Which assumptions turned out to be wrong?
+3. **Suggested Fix** - Concrete code changes needed (be specific about files/functions)
+4. **Recommended Reviewer** - Who should review the fix? (original author or domain expert?)
+
+Respond in JSON format:
+{{
+    "likely_cause": "specific technical cause",
+    "risky_assumptions": ["assumption 1", "assumption 2"],
+    "suggested_fix": "detailed fix description with file names",
+    "recommended_reviewer": "engineer username"
+}}
+"""
+
+        import json
+
+        try:
+            if self.use_anthropic:
+                response = self.client.messages.create(
+                    model="claude-3-5-sonnet-20240620",
+                    max_tokens=4000,
+                    messages=[{"role": "user", "content": prompt}]
+                )
+                content = response.content[0].text
+            else:
+                response = self.model.generate_content(prompt)
+                content = response.text
+
+            # Parse JSON response
+            json_start = content.find('{')
+            json_end = content.rfind('}') + 1
+            if json_start >= 0 and json_end > json_start:
+                analysis = json.loads(content[json_start:json_end])
+            else:
+                analysis = json.loads(content)
+
+            return analysis
+
+        except Exception as e:
+            print(f"[AI SERVICE] Error parsing analysis: {e}")
+            return {
+                "likely_cause": f"Analysis failed: {str(e)}",
+                "risky_assumptions": [],
+                "suggested_fix": "Manual investigation required",
+                "recommended_reviewer": pr.get('author', 'team')
+            }
+
+    def _format_decisions(self, decisions: list) -> str:
+        """Format decisions for prompt"""
+        if not decisions:
+            return "No decisions recorded"
+
+        lines = []
+        for d in decisions:
+            lines.append(f"- [{d.get('timestamp', 'N/A')}] {d.get('summary', 'No summary')}")
+            lines.append(f"  Impact: {d.get('impact', 'unknown')}")
+            lines.append(f"  Reasoning: {d.get('reasoning', 'N/A')[:200]}...")
+        return "\n".join(lines)
+
+    def _format_high_impact_decisions(self, decisions: list) -> str:
+        """Format high-impact decisions"""
+        if not decisions:
+            return "No high-impact decisions flagged"
+
+        lines = []
+        for d in decisions:
+            lines.append(f"⚠️ {d.get('summary', 'No summary')}")
+            lines.append(f"   Reasoning: {d.get('reasoning', 'N/A')[:300]}...")
+        return "\n".join(lines)
+
+    def _format_transcripts(self, transcripts: list) -> str:
+        """Format transcript excerpts"""
+        if not transcripts:
+            return "No transcripts available"
+
+        lines = []
+        for t in transcripts:
+            role = "User" if t.get('role') == 'user' else "Assistant"
+            content = t.get('content', '')[:300]
+            timestamp = t.get('timestamp', 'N/A')
+            lines.append(f"[{timestamp}] {role}: {content}...")
+
+        return "\n".join(lines)
+
+
 ai_service = AIService()

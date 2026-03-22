@@ -141,6 +141,18 @@ async def link_pr_to_sessions(
 
 
 async def auto_create_incident_for_opened_pr(pr_number: int, pr_data: dict, session_ids: list) -> dict:
+    """
+    Auto-creates incident when PR is opened AND triggers automated analysis + fix PR.
+
+    This connects the full automation chain:
+    1. User codes with Claude → MCP logs session
+    2. User creates PR → This function runs
+    3. Creates deployment + incident
+    4. Triggers automated analysis (background task)
+    5. Automated fix PR created
+    """
+    from fastapi import BackgroundTasks
+
     supabase = get_supabase_client()
 
     if not session_ids:
@@ -223,10 +235,27 @@ Respond with ONLY one word: low, medium, or high"""
 
     supabase.table("incidents").insert(incident_data).execute()
 
+    # ✨ NEW: Trigger automated analysis + fix PR creation in background
+    auto_analyze_enabled = os.getenv("AUTO_ANALYZE_INCIDENTS", "true").lower() == "true"
+
+    if auto_analyze_enabled:
+        print(f"[WEBHOOK] Incident {incident_id} created, triggering automated analysis...")
+        # Import the auto_analyze_and_fix function from incidents module
+        try:
+            import asyncio
+            from app.features.incidents.incidents import auto_analyze_and_fix
+
+            # Schedule background task (fire and forget)
+            asyncio.create_task(auto_analyze_and_fix(incident_id))
+            print(f"[WEBHOOK] ✅ Automated workflow queued for {incident_id}")
+        except Exception as e:
+            print(f"[WEBHOOK] ⚠️ Failed to queue automated workflow: {e}")
+
     return {
         "incident_id": incident_id,
         "severity": severity,
         "deployment_id": deployment_id,
+        "auto_analyze": auto_analyze_enabled,
         "message": f"Auto-created incident with {severity} severity based on AI session analysis"
     }
 
