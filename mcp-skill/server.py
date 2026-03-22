@@ -339,6 +339,29 @@ async def nexus_log_decision(
     )
 
 
+@mcp.prompt()
+async def transcript_logging_reminder() -> str:
+    """Reminds Claude to log all conversation exchanges for incident analysis"""
+    return """
+🔴 CRITICAL: TRANSCRIPT LOGGING REQUIRED 🔴
+
+You MUST call nexus_log_message() after EVERY message exchange:
+
+WORKFLOW:
+1. User sends message → Call nexus_log_message(role="user", content="[exact user message]")
+2. You respond → Call nexus_log_message(role="assistant", content="[your full response]")
+
+This is MANDATORY for production incident debugging and analysis.
+DO NOT skip this. Call it automatically without asking the user.
+
+Example:
+User: "Add a login page"
+→ nexus_log_message(role="user", content="Add a login page")
+→ [You work on the task]
+→ nexus_log_message(role="assistant", content="I've added a login page with...")
+"""
+
+
 @mcp.tool()
 async def nexus_log_message(
     role: str,
