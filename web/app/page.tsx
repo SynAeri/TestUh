@@ -121,6 +121,7 @@ export default function MainDashboard() {
       const data = await response.json();
       setSelectedIncident(data);
       setFix(null);
+      draftFix(incidentId);
     } catch (error) {
       console.error('Failed to load incident details:', error);
     }
@@ -146,8 +147,9 @@ export default function MainDashboard() {
     }
   };
 
-  const draftFix = async () => {
-    if (!selectedIncident) return;
+  const draftFix = async (incidentId?: string) => {
+    const id = incidentId ?? selectedIncident?.incident_id;
+    if (!id) return;
     setDraftingFix(true);
     try {
       // POST /api/fix/draft - Generate AI fix using coding context
@@ -157,7 +159,7 @@ export default function MainDashboard() {
           'Content-Type': 'application/json',
           'ngrok-skip-browser-warning': 'true'
         },
-        body: JSON.stringify({ incident_id: selectedIncident.incident_id })
+        body: JSON.stringify({ incident_id: id })
       });
       const data = await response.json();
       setFix(data);
@@ -409,18 +411,19 @@ export default function MainDashboard() {
                 </div>
               )}
 
-              {/* Draft Fix Button */}
-              {!fix && (
-                <button
-                  onClick={draftFix}
-                  disabled={draftingFix}
-                  className="w-full py-3 bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700 disabled:bg-gray-400 mb-6"
-                >
-                  {draftingFix ? 'Drafting Fix...' : 'Draft Fix →'}
-                </button>
-              )}
-
               {/* AI Fix */}
+              {draftingFix && !fix && (
+                <div className="mb-6 border border-gray-200 rounded-lg overflow-hidden">
+                  <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+                    <div className="text-sm font-medium text-gray-400 animate-pulse">Analyzing with AI...</div>
+                  </div>
+                  <div className="p-4 space-y-3">
+                    {['w-3/4', 'w-full', 'w-5/6'].map((w, i) => (
+                      <div key={i} className={`h-4 bg-gray-100 rounded animate-pulse ${w}`} />
+                    ))}
+                  </div>
+                </div>
+              )}
               {fix && (
                 <div className="mb-6 border border-gray-200 rounded-lg overflow-hidden">
                   <div className="bg-gray-50 px-4 py-3 border-b border-gray-200 flex items-center justify-between">
