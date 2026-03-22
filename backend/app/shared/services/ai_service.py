@@ -1,11 +1,11 @@
 # AI service for context summarization and fix drafting
-# Uses Anthropic Claude API for incident analysis (Google Gemini optional)
+# Uses Google Gemini for incident analysis
 
 import os
 from typing import Dict, Any
 from app.models.schemas import CodingContextSummary, IncidentDetail
 
-# Try to import Google Gemini, but make it optional
+# Import Google Gemini
 try:
     import google.generativeai as genai
     GEMINI_AVAILABLE = True
@@ -17,7 +17,7 @@ class AIService:
     """Handles all LLM interactions for the incident response platform"""
 
     def __init__(self):
-        # Check for Gemini API key first (preferred for this project)
+        # Force use of Gemini (Anthropic models having issues)
         gemini_key = os.getenv("GEMINI_API_KEY")
         anthropic_key = os.getenv("ANTHROPIC_API_KEY")
 
@@ -25,9 +25,9 @@ class AIService:
             self.use_mock = False
             self.use_anthropic = False
             genai.configure(api_key=gemini_key)
-            self.model = genai.GenerativeModel('models/gemini-2.5-flash')
+            self.model = genai.GenerativeModel('gemini-flash-latest')
             self.client = self.model
-            print("AI Service: Using Google Gemini (gemini-2.5-flash)")
+            print("AI Service: Using Google Gemini (gemini-flash-latest)")
         elif anthropic_key:
             self.use_mock = False
             self.use_anthropic = True
@@ -83,7 +83,7 @@ Respond in JSON format with these exact keys:
 
         if self.use_anthropic:
             response = self.client.messages.create(
-                model="claude-3-5-sonnet-20240620",
+                model="claude-3-5-sonnet-20241022",
                 max_tokens=2000,
                 messages=[{"role": "user", "content": prompt}]
             )
@@ -170,7 +170,7 @@ Respond in JSON format:
 
         if self.use_anthropic:
             response = self.client.messages.create(
-                model="claude-3-5-sonnet-20240620",
+                model="claude-3-5-sonnet-20241022",
                 max_tokens=2000,
                 messages=[{"role": "user", "content": prompt}]
             )
