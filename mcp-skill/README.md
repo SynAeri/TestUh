@@ -29,6 +29,17 @@ Add this to `~/.config/claude/mcp.json`:
 }
 ```
 
+● MCP Config Location by OS:
+
+  macOS:
+  ~/Library/Application Support/Claude/claude_desktop_config.json
+
+  Windows:
+  %APPDATA%\Claude\claude_desktop_config.json
+
+  Linux:
+  ~/.config/claude/mcp.json
+
 **Replace `/absolute/path/to/mcp-skill/server.py`** with the actual absolute path to `server.py`.
 
 ### 3. Restart Claude Code
