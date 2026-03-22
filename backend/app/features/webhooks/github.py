@@ -3,7 +3,7 @@
 # - Links PRs to AI sessions based on repo/branch matching
 # - Marks AI decisions as pre-PR or post-PR based on timestamps
 # - Saves PR metadata to pull_requests table with session_id link
-# - Auto-creates incidents when PRs are merged with Gemini severity analysis
+# - Auto-creates incidents when PRs are opened with Gemini severity analysis
 # - Creates deployment records for tracking incident origins
 # Endpoints: POST /webhooks/github, GET /webhooks/github/test
 
@@ -47,9 +47,10 @@ async def link_pr_to_sessions(
 ) -> dict:
     supabase = get_supabase_client()
 
+    # Find sessions for this branch (both active and recently ended)
     all_sessions = supabase.table("ai_sessions").select("*").eq(
         "branch", branch
-    ).is_("ended_at", "null").execute()
+    ).execute()
 
     repo_short = repo_name.split("/")[-1].lower()
     matching_sessions = [
@@ -139,7 +140,7 @@ async def link_pr_to_sessions(
     }
 
 
-async def auto_create_incident_for_merged_pr(pr_number: int, pr_data: dict, session_ids: list) -> dict:
+async def auto_create_incident_for_opened_pr(pr_number: int, pr_data: dict, session_ids: list) -> dict:
     supabase = get_supabase_client()
 
     if not session_ids:
@@ -164,7 +165,7 @@ async def auto_create_incident_for_merged_pr(pr_number: int, pr_data: dict, sess
     pr_body = pr_data.get("body", "")
     files_changed = [f.get("filename") for f in pr_data.get("files", [])[:20]]
 
-    severity_prompt = f"""Analyze this merged PR and AI coding session to determine incident severity.
+    severity_prompt = f"""Analyze this opened PR and AI coding session to determine incident severity.
 
 PR: {pr_title}
 Description: {pr_body}
@@ -210,7 +211,7 @@ Respond with ONLY one word: low, medium, or high"""
     incident_data = {
         "incident_id": incident_id,
         "title": f"Monitoring: {pr_title}",
-        "symptoms": f"Auto-generated incident for merged PR #{pr_number}. Monitor for potential issues from recent changes.",
+        "symptoms": f"Auto-generated incident for opened PR #{pr_number}. Monitor for potential issues from proposed changes.",
         "impacted_service": session.get("repo", "Unknown Service"),
         "severity": severity,
         "status": "open",
@@ -271,8 +272,8 @@ async def github_webhook(
     )
 
     incident_info = None
-    if action == "closed" and pr.get("merged"):
-        incident_info = await auto_create_incident_for_merged_pr(pr_number, pr, result.get("updated_sessions", []))
+    if action == "opened":
+        incident_info = await auto_create_incident_for_opened_pr(pr_number, pr, result.get("updated_sessions", []))
 
     response = {
         "status": "success",
