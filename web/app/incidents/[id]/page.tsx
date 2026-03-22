@@ -3,8 +3,8 @@
 
 'use client';
 
-import { useEffect, useState, use } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState, Suspense } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 const API_BASE = 'https://unflattering-elinor-distinctively.ngrok-free.dev';
@@ -180,33 +180,22 @@ function TranscriptViewButtons({ sessionId }: { sessionId: string }) {
                 </div>
               ) : viewMode === 'raw' && transcript ? (
                 <div className="space-y-4">
-                  {transcript.messages && transcript.messages.length > 0 ? (
-                    transcript.messages.map((msg: any, idx: number) => (
-                      <div
-                        key={idx}
-                        className={`p-4 rounded-lg ${
-                          msg.role === 'user'
-                            ? 'bg-blue-50 border-l-4 border-blue-500'
-                            : 'bg-gray-50 border-l-4 border-gray-400'
-                        }`}
-                      >
-                        <div className="text-xs font-semibold text-gray-500 mb-2">
-                          {msg.role === 'user' ? 'USER' : 'ASSISTANT'} •{' '}
-                          {new Date(msg.timestamp).toLocaleString()}
-                        </div>
-                        <div className="text-gray-900 whitespace-pre-wrap">{msg.content}</div>
+                  {transcript.messages.map((msg: any, idx: number) => (
+                    <div
+                      key={idx}
+                      className={`p-4 rounded-lg ${
+                        msg.role === 'user'
+                          ? 'bg-blue-50 border-l-4 border-blue-500'
+                          : 'bg-gray-50 border-l-4 border-gray-400'
+                      }`}
+                    >
+                      <div className="text-xs font-semibold text-gray-500 mb-2">
+                        {msg.role === 'user' ? 'USER' : 'ASSISTANT'} •{' '}
+                        {new Date(msg.timestamp).toLocaleString()}
                       </div>
-                    ))
-                  ) : (
-                    <div className="text-center text-gray-500 py-8">
-                      <div className="text-lg mb-2">No transcript available</div>
-                      <div className="text-sm">
-                        This incident was created before transcript logging was implemented.
-                        <br />
-                        New sessions will automatically log full conversations.
-                      </div>
+                      <div className="text-gray-900 whitespace-pre-wrap">{msg.content}</div>
                     </div>
-                  )}
+                  ))}
                 </div>
               ) : viewMode === 'refined' && refined ? (
                 <div className="prose prose-sm max-w-none">
@@ -243,9 +232,10 @@ function TranscriptViewButtons({ sessionId }: { sessionId: string }) {
   );
 }
 
-export default function IncidentDashboard({ params }: { params: Promise<{ id: string }> }) {
+function IncidentDashboardInner() {
+  const searchParams = useSearchParams();
   const router = useRouter();
-  const { id: incidentId } = use(params);
+  const incidentId = searchParams.get('id');
 
   const [incident, setIncident] = useState<Incident | null>(null);
   const [fix, setFix] = useState<FixDraft | null>(null);
@@ -260,30 +250,29 @@ export default function IncidentDashboard({ params }: { params: Promise<{ id: st
 
   const loadIncident = async () => {
     try {
+      let incidentData: Incident;
       if (incidentId) {
-        // Load specific incident
         const response = await fetch(`${API_BASE}/api/incidents/${incidentId}`, {
           headers: { 'ngrok-skip-browser-warning': 'true' }
         });
-        const data = await response.json();
-        setIncident(data);
+        incidentData = await response.json();
       } else {
-        // Load demo packet
         const response = await fetch(`${API_BASE}/api/demo/packet`, {
           headers: { 'ngrok-skip-browser-warning': 'true' }
         });
         const data = await response.json();
-        setIncident(data.incident);
+        incidentData = data.incident;
       }
+      setIncident(incidentData);
+      setLoading(false); // show page immediately, then load fix in background
+      draftFixForIncident(incidentData.incident_id);
     } catch (error) {
       console.error('Failed to load incident:', error);
-    } finally {
       setLoading(false);
     }
   };
 
-  const draftFix = async () => {
-    if (!incident) return;
+  const draftFixForIncident = async (incidentId: string) => {
     setDraftingFix(true);
     try {
       const response = await fetch(`${API_BASE}/api/fix/draft`, {
@@ -292,7 +281,7 @@ export default function IncidentDashboard({ params }: { params: Promise<{ id: st
           'Content-Type': 'application/json',
           'ngrok-skip-browser-warning': 'true'
         },
-        body: JSON.stringify({ incident_id: incident.incident_id })
+        body: JSON.stringify({ incident_id: incidentId })
       });
       const data = await response.json();
       setFix(data);
@@ -302,6 +291,7 @@ export default function IncidentDashboard({ params }: { params: Promise<{ id: st
       setDraftingFix(false);
     }
   };
+
 
   const assignForReview = async () => {
     if (!fix) return;
@@ -523,74 +513,135 @@ export default function IncidentDashboard({ params }: { params: Promise<{ id: st
           </div>
         )}
 
-        {/* Draft Fix Button */}
-        {!fix && (
-          <button
-            onClick={draftFix}
-            disabled={draftingFix}
-            className="w-full bg-gray-900 text-white py-4 rounded-lg font-medium hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed shadow-sm mb-4"
-          >
-            {draftingFix ? '> Analyzing with AI...' : '> Draft AI Fix'}
-          </button>
+        {/* AI-Drafted Fix — auto-loads on mount */}
+        {draftingFix && !fix && (
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-4 flex items-center gap-3">
+              <div className="flex gap-1">
+                <span className="w-2 h-2 rounded-full bg-white/40 animate-bounce" style={{ animationDelay: '0ms' }} />
+                <span className="w-2 h-2 rounded-full bg-white/40 animate-bounce" style={{ animationDelay: '150ms' }} />
+                <span className="w-2 h-2 rounded-full bg-white/40 animate-bounce" style={{ animationDelay: '300ms' }} />
+              </div>
+              <span className="text-white font-semibold text-sm tracking-wide">AI is analyzing the incident…</span>
+            </div>
+            <div className="p-6 space-y-4">
+              {['w-3/4', 'w-full', 'w-5/6', 'w-2/3'].map((w, i) => (
+                <div key={i} className="space-y-2">
+                  <div className="h-3 bg-gray-100 rounded animate-pulse w-24" />
+                  <div className={`h-4 bg-gray-100 rounded animate-pulse ${w}`} />
+                  <div className="h-4 bg-gray-100 rounded animate-pulse w-1/2" />
+                </div>
+              ))}
+            </div>
+          </div>
         )}
 
-        {/* AI-Drafted Fix */}
         {fix && (
-          <div className="bg-white rounded-lg border-2 border-green-200 p-6 shadow-sm">
-            <div className="flex items-center gap-2 mb-4">
-              <h2 className="text-sm font-semibold text-green-900 uppercase tracking-wide">
-                &gt; AI-Drafted Fix
-              </h2>
-              <span className="text-xs bg-green-100 px-2 py-1 rounded-md text-green-700 font-medium">
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            {/* Card header */}
+            <div className="bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+                <h2 className="text-white font-semibold text-sm tracking-wide uppercase">AI-Drafted Fix</h2>
+              </div>
+              <span className="text-xs bg-white/20 text-white px-3 py-1 rounded-full font-medium border border-white/30">
                 {fix.review_state}
               </span>
             </div>
 
-            <div className="space-y-6">
-              <div>
-                <div className="text-sm font-medium text-gray-500 mb-2">Analysis</div>
-                <div className="text-gray-900 leading-relaxed bg-gray-50 p-4 rounded-lg border border-gray-100">
+            <div className="p-6 space-y-5">
+              {/* Analysis */}
+              <div className="rounded-lg border border-gray-100 overflow-hidden">
+                <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 border-b border-gray-100">
+                  <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  </svg>
+                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Analysis</span>
+                </div>
+                <div className="px-4 py-3 text-gray-800 text-sm leading-relaxed">
                   {fix.analysis}
                 </div>
               </div>
 
-              <div>
-                <div className="text-sm font-medium text-gray-500 mb-2">Probable Root Cause</div>
-                <div className="text-gray-900 font-medium bg-red-50 p-4 rounded-lg border border-red-100">
-                  ! {fix.probable_cause}
+              {/* Root Cause */}
+              <div className="rounded-lg border border-red-100 overflow-hidden">
+                <div className="flex items-center gap-2 px-4 py-2 bg-red-50 border-b border-red-100">
+                  <svg className="w-4 h-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                  <span className="text-xs font-semibold text-red-600 uppercase tracking-wide">Probable Root Cause</span>
+                </div>
+                <div className="px-4 py-3 text-red-900 text-sm font-medium leading-relaxed">
+                  {fix.probable_cause}
                 </div>
               </div>
 
-              <div>
-                <div className="text-sm font-medium text-gray-500 mb-2">Proposed Fix</div>
-                <div className="text-gray-900 bg-green-50 p-4 rounded-lg border border-green-100 leading-relaxed">
+              {/* Proposed Fix */}
+              <div className="rounded-lg border border-emerald-100 overflow-hidden">
+                <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 border-b border-emerald-100">
+                  <svg className="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="text-xs font-semibold text-emerald-700 uppercase tracking-wide">Proposed Fix</span>
+                </div>
+                <div className="px-4 py-3 text-gray-800 text-sm leading-relaxed">
                   {fix.proposed_fix}
                 </div>
               </div>
 
-              <div>
-                <div className="text-sm font-medium text-gray-500 mb-2">Patch Notes (Ready for PR)</div>
-                <div className="font-mono text-sm bg-gray-900 text-gray-100 p-4 rounded-lg whitespace-pre-wrap">
+              {/* Patch Notes */}
+              <div className="rounded-lg border border-gray-800 overflow-hidden">
+                <div className="flex items-center justify-between px-4 py-2 bg-gray-900 border-b border-gray-700">
+                  <div className="flex items-center gap-2">
+                    <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                    </svg>
+                    <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Patch Notes</span>
+                  </div>
+                  <span className="text-xs text-gray-500">Ready for PR</span>
+                </div>
+                <div className="font-mono text-sm bg-gray-950 text-green-400 px-4 py-3 whitespace-pre-wrap leading-relaxed">
                   {fix.patch_notes}
                 </div>
               </div>
 
               {reviewAssigned && (
-                <div className="mb-4 flex items-center gap-2 rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-700">
-                  <span>&gt;</span>
-                  <span>Fix assigned to senior-engineer@company.com for review</span>
+                <div className="flex items-center gap-3 rounded-lg bg-emerald-50 border border-emerald-200 px-4 py-3 text-sm text-emerald-700">
+                  <svg className="w-4 h-4 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Fix assigned to <span className="font-medium">senior-engineer@company.com</span> for review
                 </div>
               )}
 
-              <div className="flex gap-3 pt-4">
+              <div className="flex gap-3 pt-1">
                 <button
                   onClick={assignForReview}
                   disabled={assigningReview || reviewAssigned}
-                  className="flex-1 bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+                  className="flex-1 bg-violet-600 text-white py-2.5 px-4 rounded-lg text-sm font-medium hover:bg-violet-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
-                  {assigningReview ? '> Assigning...' : reviewAssigned ? '> Assigned for Review' : '> Assign for Review'}
+                  {assigningReview ? (
+                    <>
+                      <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                      </svg>
+                      Assigning…
+                    </>
+                  ) : reviewAssigned ? (
+                    <>
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                      Assigned for Review
+                    </>
+                  ) : (
+                    'Assign for Review'
+                  )}
                 </button>
-                <button className="px-6 bg-gray-100 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors border border-gray-200">
+                <button className="px-5 bg-gray-100 text-gray-700 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors border border-gray-200">
                   Edit
                 </button>
               </div>
@@ -626,5 +677,13 @@ export default function IncidentDashboard({ params }: { params: Promise<{ id: st
         </div>
       </div>
     </div>
+  );
+}
+
+export default function IncidentDashboard() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#f7f6f3] flex items-center justify-center"><div className="text-gray-500">Loading...</div></div>}>
+      <IncidentDashboardInner />
+    </Suspense>
   );
 }
