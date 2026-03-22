@@ -220,13 +220,13 @@ async def log_decision(decision: AIDecision):
             "metadata": decision.metadata or {}
         }).execute()
 
-        # Update decision count in session
-        supabase.table("ai_sessions").update({
-            "decision_count": supabase.rpc(
-                "increment_decision_count",
-                {"session_id": decision.session_id}
-            )
-        }).eq("id", decision.session_id).execute()
+        # Update decision count in session (increment by 1)
+        session_result = supabase.table("ai_sessions").select("decision_count").eq("id", decision.session_id).execute()
+        if session_result.data:
+            current_count = session_result.data[0].get("decision_count", 0)
+            supabase.table("ai_sessions").update({
+                "decision_count": current_count + 1
+            }).eq("id", decision.session_id).execute()
 
         return {
             "status": "success",
