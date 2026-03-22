@@ -226,7 +226,7 @@ export default function MainDashboard() {
           {/* Logo + nav */}
           <div style={{ display:'flex', alignItems:'center', gap:32 }}>
             <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-              <img src="/openbox.jpg" alt="OpenBox" style={{ height:40, width:'auto', mixBlendMode:'screen',
+              <img src="/openboxlogo.png" alt="OpenBox" style={{ height:40, width:'auto', mixBlendMode:'screen',
   WebkitMaskImage:'radial-gradient(ellipse 85% 85% at center, black 40%, transparent 100%)',
   maskImage:'radial-gradient(ellipse 85% 85% at center, black 40%, transparent 100%)' }} />
               <div style={{ fontSize:10, color: C.dim, textTransform:'uppercase', letterSpacing:'0.08em' }}>Incident Intelligence</div>
