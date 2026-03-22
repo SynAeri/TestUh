@@ -3,7 +3,7 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -231,7 +231,7 @@ function TranscriptViewButtons({ sessionId }: { sessionId: string }) {
   );
 }
 
-export default function IncidentDashboard() {
+function IncidentDashboardInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const incidentId = searchParams.get('id');
@@ -676,5 +676,13 @@ export default function IncidentDashboard() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function IncidentDashboard() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#f7f6f3] flex items-center justify-center"><div className="text-gray-500">Loading...</div></div>}>
+      <IncidentDashboardInner />
+    </Suspense>
   );
 }
