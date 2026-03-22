@@ -27,7 +27,7 @@ cd /path/to/your/project  # Go back to project root
 cat > .mcp.json << 'EOF'
 {
   "mcpServers": {
-    "nexus": {
+    "new-feature": {
       "command": "python3",
       "args": ["./mcp-skill/server.py"],
       "env": {
@@ -49,7 +49,7 @@ EOF
 claude
 ```
 
-Approve the "nexus" server when prompted.
+Approve the "new-feature" server when prompted.
 
 ## Project Structure
 
