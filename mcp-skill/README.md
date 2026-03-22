@@ -1,17 +1,19 @@
 # Nexus MCP Skill
 
-Claude Code skill that captures AI coding decisions in real time and saves them for incident tracing.
+Automatically logs AI coding sessions, decisions, and transcripts for incident analysis.
 
-## Install
+## Installation
+
+### 1. Install Dependencies
 
 ```bash
 cd mcp-skill
 pip install -r requirements.txt
 ```
 
-## Add to Claude Code
+### 2. Add to Global Claude MCP Config
 
-Edit `~/.claude/claude_desktop_config.json` (or Claude Code MCP settings):
+Add this to `~/.config/claude/mcp.json`:
 
 ```json
 {
@@ -20,63 +22,39 @@ Edit `~/.claude/claude_desktop_config.json` (or Claude Code MCP settings):
       "command": "python",
       "args": ["/absolute/path/to/mcp-skill/server.py"],
       "env": {
-        "NEXUS_API_URL": "https://your-backend.com"
+        "NEXUS_API_URL": "https://unflattering-elinor-distinctively.ngrok-free.dev"
       }
     }
   }
 }
 ```
 
-`NEXUS_API_URL` is optional — if not set, data is saved locally to `sessions.json` only.
+**Replace `/absolute/path/to/mcp-skill/server.py`** with the actual absolute path to `server.py`.
 
-## Tools Claude can call
+### 3. Restart Claude Code
 
-| Tool | When | What it does |
-|---|---|---|
-| `nexus_start_session` | Start of coding | Creates session with repo/branch/ticket |
-| `nexus_log_decision` | Each key decision | Saves summary + full reasoning + files |
-| `nexus_end_session` | PR opened / done | Closes session, links PR number |
-| `nexus_status` | Anytime | Shows current session + recent decisions |
-
-## Data saved
-
-All data is saved to `mcp-skill/sessions.json`:
-
-```json
-{
-  "sessions": [
-    {
-      "id": "sess_a4b3c2d1",
-      "repo": "acme/api-server",
-      "branch": "feat/jwt-migration",
-      "agent": "claude",
-      "engineer": "james.chen",
-      "ticket_id": "LIN-247",
-      "started_at": "2026-03-21T10:00:00Z",
-      "ended_at": "2026-03-21T11:23:00Z",
-      "pr_id": "47",
-      "decision_ids": ["dec_x1y2z3"]
-    }
-  ],
-  "decisions": [
-    {
-      "id": "dec_x1y2z3",
-      "session_id": "sess_a4b3c2d1",
-      "summary": "Switched to jose library for JWT handling",
-      "reasoning": "The existing jsonwebtoken library...",
-      "impact": "high",
-      "files_changed": ["src/auth.ts", "middleware/validate.ts"],
-      "ticket_id": "LIN-247",
-      "timestamp": "2026-03-21T10:34:00Z"
-    }
-  ]
-}
+```bash
+claude
 ```
 
-## Backend endpoints expected (when ready)
+Approve the "nexus" server when prompted.
 
-```
-POST /sessions          → create session
-POST /decisions         → log decision
-POST /sessions/:id/end  → close session
-```
+## Usage
+
+Claude automatically has access to these tools:
+
+- `nexus_start_session()` - Start tracking a coding session
+- `nexus_log_message()` - Log individual messages
+- `nexus_log_exchange()` - Log user+assistant exchange
+- `nexus_log_decision()` - Log technical decisions
+- `nexus_end_session()` - End session
+
+Claude should call these automatically when relevant.
+
+## Configuration
+
+To use a different backend, change `NEXUS_API_URL` in your MCP config.
+
+## Uninstall
+
+Remove the "nexus" entry from `~/.config/claude/mcp.json`.
