@@ -14,9 +14,8 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Signal Canvas",
-  description:
-    "A Next.js control room for live workspace insights and semantic search.",
+  title: "Whitebox",
+  description: "AI-powered incident intelligence and decision tracing.",
 };
 
 export default function RootLayout({
