@@ -3,8 +3,8 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useEffect, useState, use } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 const API_BASE = 'https://unflattering-elinor-distinctively.ngrok-free.dev';
@@ -179,22 +179,33 @@ function TranscriptViewButtons({ sessionId }: { sessionId: string }) {
                 </div>
               ) : viewMode === 'raw' && transcript ? (
                 <div className="space-y-4">
-                  {transcript.messages.map((msg: any, idx: number) => (
-                    <div
-                      key={idx}
-                      className={`p-4 rounded-lg ${
-                        msg.role === 'user'
-                          ? 'bg-blue-50 border-l-4 border-blue-500'
-                          : 'bg-gray-50 border-l-4 border-gray-400'
-                      }`}
-                    >
-                      <div className="text-xs font-semibold text-gray-500 mb-2">
-                        {msg.role === 'user' ? 'USER' : 'ASSISTANT'} •{' '}
-                        {new Date(msg.timestamp).toLocaleString()}
+                  {transcript.messages && transcript.messages.length > 0 ? (
+                    transcript.messages.map((msg: any, idx: number) => (
+                      <div
+                        key={idx}
+                        className={`p-4 rounded-lg ${
+                          msg.role === 'user'
+                            ? 'bg-blue-50 border-l-4 border-blue-500'
+                            : 'bg-gray-50 border-l-4 border-gray-400'
+                        }`}
+                      >
+                        <div className="text-xs font-semibold text-gray-500 mb-2">
+                          {msg.role === 'user' ? 'USER' : 'ASSISTANT'} •{' '}
+                          {new Date(msg.timestamp).toLocaleString()}
+                        </div>
+                        <div className="text-gray-900 whitespace-pre-wrap">{msg.content}</div>
                       </div>
-                      <div className="text-gray-900 whitespace-pre-wrap">{msg.content}</div>
+                    ))
+                  ) : (
+                    <div className="text-center text-gray-500 py-8">
+                      <div className="text-lg mb-2">No transcript available</div>
+                      <div className="text-sm">
+                        This incident was created before transcript logging was implemented.
+                        <br />
+                        New sessions will automatically log full conversations.
+                      </div>
                     </div>
-                  ))}
+                  )}
                 </div>
               ) : viewMode === 'refined' && refined ? (
                 <div className="prose prose-sm max-w-none">
@@ -231,10 +242,9 @@ function TranscriptViewButtons({ sessionId }: { sessionId: string }) {
   );
 }
 
-export default function IncidentDashboard() {
-  const searchParams = useSearchParams();
+export default function IncidentDashboard({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
-  const incidentId = searchParams.get('id');
+  const { id: incidentId } = use(params);
 
   const [incident, setIncident] = useState<Incident | null>(null);
   const [fix, setFix] = useState<FixDraft | null>(null);
