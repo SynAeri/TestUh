@@ -79,6 +79,20 @@
       "decision_ids": [
         "dec_1ae0d06d"
       ]
+    },
+    {
+      "id": "sess_69ccf2c0",
+      "repo": "SynAeri/Playcrowd",
+      "branch": "jordan",
+      "agent": "claude",
+      "engineer": null,
+      "ticket_id": null,
+      "started_at": "2026-03-22T04:38:07.220252+00:00",
+      "ended_at": null,
+      "decision_ids": [
+        "dec_a79a1230"
+      ],
+      "transcript_ids": []
     }
   ],
   "decisions": [
@@ -193,6 +207,19 @@
       ],
       "ticket_id": null,
       "timestamp": "2026-03-22T02:18:53.578042+00:00",
+      "pr_milestone": null
+    },
+    {
+      "id": "dec_a79a1230",
+      "session_id": "sess_69ccf2c0",
+      "summary": "Added random floating movement to TetoPear with intentional memory leak",
+      "reasoning": "Added random position changes every 2-5 seconds to make the tetopear float around. Intentionally introduced a bug where the useEffect cleanup doesn't return the clearInterval function, causing a memory leak as intervals accumulate on component re-renders.",
+      "impact": "medium",
+      "files_changed": [
+        "app/components/TetoPear.tsx"
+      ],
+      "ticket_id": null,
+      "timestamp": "2026-03-22T04:39:15.770755+00:00",
       "pr_milestone": null
     }
   ]

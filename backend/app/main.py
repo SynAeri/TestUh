@@ -14,6 +14,7 @@ from app.features.ai_sessions import ai_sessions
 from app.features.config import config
 from app.features.webhooks import github
 from app.features.monitoring import monitoring
+from app.features.transcripts import transcripts
 from app.shared.data.seed import seed_golden_road_data
 
 app = FastAPI(
@@ -38,6 +39,7 @@ app.include_router(ai_sessions.router)
 app.include_router(config.router)
 app.include_router(github.router)
 app.include_router(monitoring.router)
+app.include_router(transcripts.router)
 
 @app.on_event("startup")
 async def startup_event():

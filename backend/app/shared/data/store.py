@@ -18,6 +18,7 @@ class DataStore:
         self.tickets: Dict[str, TicketMock] = {}
         self.incidents: Dict[str, IncidentDetail] = {}
         self.fixes: Dict[str, FixDraftResponse] = {}
+        self.transcripts = []  # List of transcript messages
 
     def save_context(self, context_id: str, context: CodingContextSummary) -> None:
         """Save coding context summary"""
@@ -75,6 +76,7 @@ class DataStore:
         self.tickets.clear()
         self.incidents.clear()
         self.fixes.clear()
+        self.transcripts.clear()
 
 
 # Global singleton instance
