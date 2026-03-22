@@ -14,7 +14,7 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Whitebox",
+  title: "OpenBox",
   description: "AI-powered incident intelligence and decision tracing.",
 };
 

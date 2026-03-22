@@ -308,10 +308,9 @@ export default function IncidentDetailPage({ params }: { params: Promise<{ id: s
           <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
             {/* Logo */}
             <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-              <div style={{ width: 32, height: 32, borderRadius: 8, display: 'flex', alignItems: 'center',
-                justifyContent: 'center', background: 'linear-gradient(135deg,#1f2d40 0%,#00a3ff 100%)',
-                boxShadow: '0 0 16px rgba(0,163,255,0.45)', fontWeight: 800, fontSize: 14, color: '#fff' }}>N</div>
-              <span style={{ fontWeight: 700, fontSize: 14, color: C.txt, letterSpacing: '-0.01em' }}>Whitebox</span>
+              <img src="/openboxlogo.png" alt="OpenBox" style={{ height: 40, width: 'auto', mixBlendMode: 'screen',
+  WebkitMaskImage: 'radial-gradient(ellipse 85% 85% at center, black 40%, transparent 100%)',
+  maskImage: 'radial-gradient(ellipse 85% 85% at center, black 40%, transparent 100%)' }} />
             </Link>
 
             {/* Breadcrumb */}

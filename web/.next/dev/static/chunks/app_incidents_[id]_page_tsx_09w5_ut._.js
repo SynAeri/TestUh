@@ -748,42 +748,22 @@ function IncidentDetailPage({ params }) {
                                         gap: 10,
                                         textDecoration: 'none'
                                     },
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            style: {
-                                                width: 32,
-                                                height: 32,
-                                                borderRadius: 8,
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                background: 'linear-gradient(135deg,#1f2d40 0%,#00a3ff 100%)',
-                                                boxShadow: '0 0 16px rgba(0,163,255,0.45)',
-                                                fontWeight: 800,
-                                                fontSize: 14,
-                                                color: '#fff'
-                                            },
-                                            children: "N"
-                                        }, void 0, false, {
-                                            fileName: "[project]/app/incidents/[id]/page.tsx",
-                                            lineNumber: 311,
-                                            columnNumber: 15
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                            style: {
-                                                fontWeight: 700,
-                                                fontSize: 14,
-                                                color: C.txt,
-                                                letterSpacing: '-0.01em'
-                                            },
-                                            children: "Whitebox"
-                                        }, void 0, false, {
-                                            fileName: "[project]/app/incidents/[id]/page.tsx",
-                                            lineNumber: 314,
-                                            columnNumber: 15
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+                                        src: "/openboxlogo.png",
+                                        alt: "OpenBox",
+                                        style: {
+                                            height: 40,
+                                            width: 'auto',
+                                            mixBlendMode: 'screen',
+                                            WebkitMaskImage: 'radial-gradient(ellipse 85% 85% at center, black 40%, transparent 100%)',
+                                            maskImage: 'radial-gradient(ellipse 85% 85% at center, black 40%, transparent 100%)'
+                                        }
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/incidents/[id]/page.tsx",
+                                        lineNumber: 311,
+                                        columnNumber: 15
+                                    }, this)
+                                }, void 0, false, {
                                     fileName: "[project]/app/incidents/[id]/page.tsx",
                                     lineNumber: 310,
                                     columnNumber: 13
@@ -801,7 +781,7 @@ function IncidentDetailPage({ params }) {
                                             children: "/"
                                         }, void 0, false, {
                                             fileName: "[project]/app/incidents/[id]/page.tsx",
-                                            lineNumber: 319,
+                                            lineNumber: 318,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -816,14 +796,14 @@ function IncidentDetailPage({ params }) {
                                             children: "Incidents"
                                         }, void 0, false, {
                                             fileName: "[project]/app/incidents/[id]/page.tsx",
-                                            lineNumber: 320,
+                                            lineNumber: 319,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                             children: "/"
                                         }, void 0, false, {
                                             fileName: "[project]/app/incidents/[id]/page.tsx",
-                                            lineNumber: 325,
+                                            lineNumber: 324,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -838,13 +818,13 @@ function IncidentDetailPage({ params }) {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/incidents/[id]/page.tsx",
-                                            lineNumber: 326,
+                                            lineNumber: 325,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/incidents/[id]/page.tsx",
-                                    lineNumber: 318,
+                                    lineNumber: 317,
                                     columnNumber: 13
                                 }, this)
                             ]
@@ -865,7 +845,7 @@ function IncidentDetailPage({ params }) {
                                     c: SEV[incident.severity] ?? SEV.low
                                 }, void 0, false, {
                                     fileName: "[project]/app/incidents/[id]/page.tsx",
-                                    lineNumber: 334,
+                                    lineNumber: 333,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Chip, {
@@ -873,13 +853,13 @@ function IncidentDetailPage({ params }) {
                                     c: STAT[incident.status] ?? STAT.resolved
                                 }, void 0, false, {
                                     fileName: "[project]/app/incidents/[id]/page.tsx",
-                                    lineNumber: 335,
+                                    lineNumber: 334,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/incidents/[id]/page.tsx",
-                            lineNumber: 333,
+                            lineNumber: 332,
                             columnNumber: 11
                         }, this)
                     ]
@@ -918,7 +898,7 @@ function IncidentDetailPage({ params }) {
                                 children: incident.title
                             }, void 0, false, {
                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                lineNumber: 346,
+                                lineNumber: 345,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -951,7 +931,7 @@ function IncidentDetailPage({ params }) {
                                                 children: "ID"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                lineNumber: 353,
+                                                lineNumber: 352,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -964,13 +944,13 @@ function IncidentDetailPage({ params }) {
                                                 children: incident.incident_id
                                             }, void 0, false, {
                                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                lineNumber: 355,
+                                                lineNumber: 354,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                        lineNumber: 350,
+                                        lineNumber: 349,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -981,7 +961,7 @@ function IncidentDetailPage({ params }) {
                                         children: incident.impacted_service
                                     }, void 0, false, {
                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                        lineNumber: 359,
+                                        lineNumber: 358,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -992,7 +972,7 @@ function IncidentDetailPage({ params }) {
                                         children: "·"
                                     }, void 0, false, {
                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                        lineNumber: 360,
+                                        lineNumber: 359,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1003,19 +983,19 @@ function IncidentDetailPage({ params }) {
                                         children: new Date(incident.created_at).toLocaleString()
                                     }, void 0, false, {
                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                        lineNumber: 361,
+                                        lineNumber: 360,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                lineNumber: 348,
+                                lineNumber: 347,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                        lineNumber: 345,
+                        lineNumber: 344,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1037,7 +1017,7 @@ function IncidentDetailPage({ params }) {
                                 children: "Incident Details"
                             }, void 0, false, {
                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                lineNumber: 367,
+                                lineNumber: 366,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1069,7 +1049,7 @@ function IncidentDetailPage({ params }) {
                                                 children: f.label
                                             }, void 0, false, {
                                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                lineNumber: 375,
+                                                lineNumber: 374,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1081,24 +1061,24 @@ function IncidentDetailPage({ params }) {
                                                 children: f.val
                                             }, void 0, false, {
                                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                lineNumber: 377,
+                                                lineNumber: 376,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, f.label, true, {
                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                        lineNumber: 374,
+                                        lineNumber: 373,
                                         columnNumber: 15
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                lineNumber: 369,
+                                lineNumber: 368,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                        lineNumber: 366,
+                        lineNumber: 365,
                         columnNumber: 9
                     }, this),
                     incident.deployment && incident.related_pr && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1120,7 +1100,7 @@ function IncidentDetailPage({ params }) {
                                 children: "Timeline"
                             }, void 0, false, {
                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                lineNumber: 386,
+                                lineNumber: 385,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1141,7 +1121,7 @@ function IncidentDetailPage({ params }) {
                                         }
                                     }, void 0, false, {
                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                        lineNumber: 389,
+                                        lineNumber: 388,
                                         columnNumber: 15
                                     }, this),
                                     [
@@ -1186,7 +1166,7 @@ function IncidentDetailPage({ params }) {
                                                     }
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                    lineNumber: 403,
+                                                    lineNumber: 402,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1201,7 +1181,7 @@ function IncidentDetailPage({ params }) {
                                                             children: t.label
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                            lineNumber: 407,
+                                                            lineNumber: 406,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1214,7 +1194,7 @@ function IncidentDetailPage({ params }) {
                                                             children: t.sub
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                            lineNumber: 408,
+                                                            lineNumber: 407,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1225,31 +1205,31 @@ function IncidentDetailPage({ params }) {
                                                             children: t.date
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                            lineNumber: 410,
+                                                            lineNumber: 409,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                    lineNumber: 406,
+                                                    lineNumber: 405,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, t.label, true, {
                                             fileName: "[project]/app/incidents/[id]/page.tsx",
-                                            lineNumber: 401,
+                                            lineNumber: 400,
                                             columnNumber: 17
                                         }, this))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                lineNumber: 388,
+                                lineNumber: 387,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                        lineNumber: 385,
+                        lineNumber: 384,
                         columnNumber: 11
                     }, this),
                     incident.coding_context && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1294,7 +1274,7 @@ function IncidentDetailPage({ params }) {
                                                 children: "AI"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                lineNumber: 425,
+                                                lineNumber: 424,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1308,7 +1288,7 @@ function IncidentDetailPage({ params }) {
                                                         children: "AI Coding Context"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                        lineNumber: 430,
+                                                        lineNumber: 429,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1319,13 +1299,13 @@ function IncidentDetailPage({ params }) {
                                                         children: "Captured from developer session"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                        lineNumber: 431,
+                                                        lineNumber: 430,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                lineNumber: 429,
+                                                lineNumber: 428,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1343,13 +1323,13 @@ function IncidentDetailPage({ params }) {
                                                 children: "THE MAGIC"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                lineNumber: 433,
+                                                lineNumber: 432,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                        lineNumber: 424,
+                                        lineNumber: 423,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1368,13 +1348,13 @@ function IncidentDetailPage({ params }) {
                                         children: "View Transcript"
                                     }, void 0, false, {
                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                        lineNumber: 437,
+                                        lineNumber: 436,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                lineNumber: 423,
+                                lineNumber: 422,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1396,7 +1376,7 @@ function IncidentDetailPage({ params }) {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                lineNumber: 445,
+                                lineNumber: 444,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1423,7 +1403,7 @@ function IncidentDetailPage({ params }) {
                                         children: "Session ID"
                                     }, void 0, false, {
                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                        lineNumber: 455,
+                                        lineNumber: 454,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1435,13 +1415,13 @@ function IncidentDetailPage({ params }) {
                                         children: incident.coding_context.session_timestamp
                                     }, void 0, false, {
                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                        lineNumber: 457,
+                                        lineNumber: 456,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                lineNumber: 452,
+                                lineNumber: 451,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1476,7 +1456,7 @@ function IncidentDetailPage({ params }) {
                                                         children: "📋"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                        lineNumber: 468,
+                                                        lineNumber: 467,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1488,7 +1468,7 @@ function IncidentDetailPage({ params }) {
                                                         children: "Key Decisions"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                        lineNumber: 469,
+                                                        lineNumber: 468,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1503,13 +1483,13 @@ function IncidentDetailPage({ params }) {
                                                         children: incident.coding_context.decisions.length
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                        lineNumber: 470,
+                                                        lineNumber: 469,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                lineNumber: 466,
+                                                lineNumber: 465,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1543,7 +1523,7 @@ function IncidentDetailPage({ params }) {
                                                                 children: i + 1
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                                lineNumber: 476,
+                                                                lineNumber: 475,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1556,24 +1536,24 @@ function IncidentDetailPage({ params }) {
                                                                 children: d
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                                lineNumber: 480,
+                                                                lineNumber: 479,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, i, true, {
                                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                        lineNumber: 475,
+                                                        lineNumber: 474,
                                                         columnNumber: 21
                                                     }, this))
                                             }, void 0, false, {
                                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                lineNumber: 473,
+                                                lineNumber: 472,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                        lineNumber: 464,
+                                        lineNumber: 463,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1600,7 +1580,7 @@ function IncidentDetailPage({ params }) {
                                                         children: "⚠️"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                        lineNumber: 491,
+                                                        lineNumber: 490,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1612,7 +1592,7 @@ function IncidentDetailPage({ params }) {
                                                         children: "Assumptions"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                        lineNumber: 492,
+                                                        lineNumber: 491,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1627,13 +1607,13 @@ function IncidentDetailPage({ params }) {
                                                         children: incident.coding_context.assumptions.length
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                        lineNumber: 493,
+                                                        lineNumber: 492,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                lineNumber: 489,
+                                                lineNumber: 488,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1667,7 +1647,7 @@ function IncidentDetailPage({ params }) {
                                                                 children: "!"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                                lineNumber: 499,
+                                                                lineNumber: 498,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1680,30 +1660,30 @@ function IncidentDetailPage({ params }) {
                                                                 children: a
                                                             }, void 0, false, {
                                                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                                lineNumber: 502,
+                                                                lineNumber: 501,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, i, true, {
                                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                        lineNumber: 498,
+                                                        lineNumber: 497,
                                                         columnNumber: 21
                                                     }, this))
                                             }, void 0, false, {
                                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                lineNumber: 496,
+                                                lineNumber: 495,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                        lineNumber: 487,
+                                        lineNumber: 486,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                lineNumber: 462,
+                                lineNumber: 461,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1720,7 +1700,7 @@ function IncidentDetailPage({ params }) {
                                         children: "Files Changed"
                                     }, void 0, false, {
                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                        lineNumber: 511,
+                                        lineNumber: 510,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1742,18 +1722,18 @@ function IncidentDetailPage({ params }) {
                                                 children: f
                                             }, i, false, {
                                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                lineNumber: 515,
+                                                lineNumber: 514,
                                                 columnNumber: 19
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                        lineNumber: 513,
+                                        lineNumber: 512,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                lineNumber: 510,
+                                lineNumber: 509,
                                 columnNumber: 13
                             }, this),
                             incident.coding_context.intended_outcome && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1778,7 +1758,7 @@ function IncidentDetailPage({ params }) {
                                         children: "Intended Outcome"
                                     }, void 0, false, {
                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                        lineNumber: 526,
+                                        lineNumber: 525,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1791,19 +1771,19 @@ function IncidentDetailPage({ params }) {
                                         children: incident.coding_context.intended_outcome
                                     }, void 0, false, {
                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                        lineNumber: 528,
+                                        lineNumber: 527,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                lineNumber: 523,
+                                lineNumber: 522,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                        lineNumber: 420,
+                        lineNumber: 419,
                         columnNumber: 11
                     }, this),
                     draftingFix && !fix && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1834,7 +1814,7 @@ function IncidentDetailPage({ params }) {
                                         }
                                     }, void 0, false, {
                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                        lineNumber: 542,
+                                        lineNumber: 541,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1846,13 +1826,13 @@ function IncidentDetailPage({ params }) {
                                         children: "AI is analyzing…"
                                     }, void 0, false, {
                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                        lineNumber: 544,
+                                        lineNumber: 543,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                lineNumber: 540,
+                                lineNumber: 539,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1897,18 +1877,18 @@ function IncidentDetailPage({ params }) {
                                         }
                                     }, i, false, {
                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                        lineNumber: 548,
+                                        lineNumber: 547,
                                         columnNumber: 17
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                lineNumber: 546,
+                                lineNumber: 545,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                        lineNumber: 539,
+                        lineNumber: 538,
                         columnNumber: 11
                     }, this),
                     fix && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1945,7 +1925,7 @@ function IncidentDetailPage({ params }) {
                                                 }
                                             }, void 0, false, {
                                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                lineNumber: 561,
+                                                lineNumber: 560,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1957,13 +1937,13 @@ function IncidentDetailPage({ params }) {
                                                 children: "AI-Drafted Fix"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                lineNumber: 563,
+                                                lineNumber: 562,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                        lineNumber: 560,
+                                        lineNumber: 559,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Chip, {
@@ -1971,13 +1951,13 @@ function IncidentDetailPage({ params }) {
                                         c: chip(C.purple)
                                     }, void 0, false, {
                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                        lineNumber: 565,
+                                        lineNumber: 564,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                lineNumber: 558,
+                                lineNumber: 557,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2020,7 +2000,7 @@ function IncidentDetailPage({ params }) {
                                                     children: label
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                    lineNumber: 575,
+                                                    lineNumber: 574,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2038,13 +2018,13 @@ function IncidentDetailPage({ params }) {
                                                     children: content
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                    lineNumber: 577,
+                                                    lineNumber: 576,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, label, true, {
                                             fileName: "[project]/app/incidents/[id]/page.tsx",
-                                            lineNumber: 574,
+                                            lineNumber: 573,
                                             columnNumber: 17
                                         }, this)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2061,7 +2041,7 @@ function IncidentDetailPage({ params }) {
                                                 children: "Patch Notes"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                lineNumber: 584,
+                                                lineNumber: 583,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("pre", {
@@ -2081,13 +2061,13 @@ function IncidentDetailPage({ params }) {
                                                 children: fix.patch_notes
                                             }, void 0, false, {
                                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                                lineNumber: 586,
+                                                lineNumber: 585,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                        lineNumber: 583,
+                                        lineNumber: 582,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2109,19 +2089,19 @@ function IncidentDetailPage({ params }) {
                                         children: assigningReview ? 'Assigning…' : fix.review_state === 'in_review' ? '✓ Assigned for Review' : 'Assign for Review'
                                     }, void 0, false, {
                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                        lineNumber: 593,
+                                        lineNumber: 592,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                lineNumber: 567,
+                                lineNumber: 566,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                        lineNumber: 557,
+                        lineNumber: 556,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2170,7 +2150,7 @@ function IncidentDetailPage({ params }) {
                                         }
                                     }, void 0, false, {
                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                        lineNumber: 615,
+                                        lineNumber: 614,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2185,7 +2165,7 @@ function IncidentDetailPage({ params }) {
                                         children: s.label
                                     }, void 0, false, {
                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                        lineNumber: 616,
+                                        lineNumber: 615,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2197,7 +2177,7 @@ function IncidentDetailPage({ params }) {
                                         children: s.val
                                     }, void 0, false, {
                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                        lineNumber: 618,
+                                        lineNumber: 617,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2213,24 +2193,24 @@ function IncidentDetailPage({ params }) {
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                                        lineNumber: 619,
+                                        lineNumber: 618,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, s.label, true, {
                                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                                lineNumber: 614,
+                                lineNumber: 613,
                                 columnNumber: 13
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/app/incidents/[id]/page.tsx",
-                        lineNumber: 608,
+                        lineNumber: 607,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                lineNumber: 341,
+                lineNumber: 340,
                 columnNumber: 7
             }, this),
             showTranscript && incident.coding_context && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(TranscriptModal, {
@@ -2238,7 +2218,7 @@ function IncidentDetailPage({ params }) {
                 onClose: ()=>setShowTranscript(false)
             }, void 0, false, {
                 fileName: "[project]/app/incidents/[id]/page.tsx",
-                lineNumber: 627,
+                lineNumber: 626,
                 columnNumber: 9
             }, this)
         ]

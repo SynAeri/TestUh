@@ -2,7 +2,7 @@
   "mcpServers": {
     "new-feature": {
       "command": "python3",
-      "args": ["/Users/anushasubedi/Desktop/foundersHackathon/TestUh/mcp-skill/server.py"],
+      "args": ["./mcp-skill/server.py"],
       "env": {
         "NEXUS_API_URL": "https://unflattering-elinor-distinctively.ngrok-free.dev"
       }

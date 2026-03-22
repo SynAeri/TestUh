@@ -185,7 +185,7 @@ export default function MainDashboard() {
           <div key={col} style={{ width:8, height:8, borderRadius:'50%', background:col,
             animation:`bounce 1s ${i*0.15}s infinite alternate` }} />
         ))}
-        <span style={{ color: C.sub, fontSize:14, marginLeft:8 }}>Loading Whitebox…</span>
+        <span style={{ color: C.sub, fontSize:14, marginLeft:8 }}>Loading OpenBox…</span>
       </div>
       <style>{`@keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-8px)}}`}</style>
     </div>
@@ -226,14 +226,10 @@ export default function MainDashboard() {
           {/* Logo + nav */}
           <div style={{ display:'flex', alignItems:'center', gap:32 }}>
             <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-              {/* Logo mark — gradient square like Supabase */}
-              <div style={{ width:32, height:32, borderRadius:8, display:'flex', alignItems:'center', justifyContent:'center',
-                background:'linear-gradient(135deg,#1f2d40 0%,#00a3ff 100%)',
-                boxShadow:'0 0 16px rgba(0,163,255,0.45)', fontWeight:800, fontSize:14, color:'#fff' }}>N</div>
-              <div>
-                <div style={{ fontWeight:700, fontSize:14, color: C.txt, letterSpacing:'-0.01em' }}>Whitebox</div>
-                <div style={{ fontSize:10, color: C.dim, textTransform:'uppercase', letterSpacing:'0.08em' }}>Incident Intelligence</div>
-              </div>
+              <img src="/openboxlogo.png" alt="OpenBox" style={{ height:40, width:'auto', mixBlendMode:'screen',
+  WebkitMaskImage:'radial-gradient(ellipse 85% 85% at center, black 40%, transparent 100%)',
+  maskImage:'radial-gradient(ellipse 85% 85% at center, black 40%, transparent 100%)' }} />
+              <div style={{ fontSize:10, color: C.dim, textTransform:'uppercase', letterSpacing:'0.08em' }}>Incident Intelligence</div>
             </div>
 
             {/* Tabs — elastic sliding pill */}
