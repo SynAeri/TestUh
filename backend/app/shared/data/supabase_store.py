@@ -70,7 +70,8 @@ class SupabaseStore:
                 linked_pr_id=session.get('pr_id'),
                 linked_ticket_id=session.get('ticket_id'),
                 intended_outcome=f"Complete work on ticket {session.get('ticket_id', 'N/A')}",
-                session_timestamp=datetime.fromisoformat(session['started_at'].replace('Z', '+00:00'))
+                session_timestamp=datetime.fromisoformat(session['started_at'].replace('Z', '+00:00')),
+                session_id=session_id
             )
 
             return context

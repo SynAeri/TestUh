@@ -19,6 +19,7 @@ class CodingContextSummary(BaseModel):
     linked_deployment_id: Optional[str] = None
     intended_outcome: str
     session_timestamp: datetime = Field(default_factory=datetime.utcnow)
+    session_id: Optional[str] = None
 
 class CodingContextRequest(BaseModel):
     """Request to save coding context - accepts either transcript or structured data"""

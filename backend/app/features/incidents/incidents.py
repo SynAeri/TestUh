@@ -38,8 +38,24 @@ async def trigger_incident(request: IncidentTriggerRequest):
         context = None
         if deployment:
             try:
-                # Find PR by commit SHA
+                # Find PR by commit SHA (or by deployment metadata)
                 pr_result = supabase_store.client.table("pull_requests").select("*").eq("commit_sha", deployment.commit_sha).execute()
+
+                # If not found by exact commit match, try finding by deployment's linked PR
+                if not pr_result.data:
+                    deployment_result = supabase_store.client.table("deployments").select("pr_id").eq("deployment_id", deployment.deployment_id).execute()
+                    if deployment_result.data and deployment_result.data[0].get('pr_id'):
+                        pr_id = deployment_result.data[0]['pr_id']
+                        pr_result = supabase_store.client.table("pull_requests").select("*").eq("pr_id", f"PR-{pr_id}").execute()
+
+                # Last fallback: parse PR number from deployment ID (e.g., "deploy-pr10-...")
+                if not pr_result.data and "pr" in deployment.deployment_id.lower():
+                    import re
+                    match = re.search(r'pr(\d+)', deployment.deployment_id, re.IGNORECASE)
+                    if match:
+                        pr_number = match.group(1)
+                        pr_result = supabase_store.client.table("pull_requests").select("*").eq("pr_id", f"PR-{pr_number}").execute()
+
                 if pr_result.data:
                     pr_data = pr_result.data[0]
                     from app.models.schemas import PRMock
@@ -54,9 +70,30 @@ async def trigger_incident(request: IncidentTriggerRequest):
                         merged_at=datetime.fromisoformat(pr_data['merged_at'].replace('Z', '+00:00')) if pr_data.get('merged_at') else None,
                         files_changed=pr_data.get('files_changed', [])
                     )
-                    # Get session context
-                    if pr_data.get('session_id'):
-                        context = supabase_store.get_session_context(pr_data['session_id'])
+                    # Find the best session for this PR (prefer one with transcripts)
+                    try:
+                        sessions_result = supabase_store.client.table("ai_sessions").select("id").eq("pr_id", pr_data['pr_id'].replace('PR-', '')).execute()
+                        if sessions_result.data:
+                            # Check each session for transcript count
+                            best_session_id = None
+                            max_transcripts = 0
+                            for session_data in sessions_result.data:
+                                sid = session_data['id']
+                                transcript_result = supabase_store.client.table("transcripts").select("id", count="exact").eq("session_id", sid).execute()
+                                count = transcript_result.count or 0
+                                if count > max_transcripts:
+                                    max_transcripts = count
+                                    best_session_id = sid
+
+                            # Use session with most transcripts, or fall back to pr_data session_id
+                            session_to_use = best_session_id if best_session_id else pr_data.get('session_id')
+                            if session_to_use:
+                                context = supabase_store.get_session_context(session_to_use)
+                    except Exception as e:
+                        print(f"Error finding best session: {e}")
+                        # Fallback to PR's session_id
+                        if pr_data.get('session_id'):
+                            context = supabase_store.get_session_context(pr_data['session_id'])
             except Exception as e:
                 print(f"Error linking PR/session: {e}")
 

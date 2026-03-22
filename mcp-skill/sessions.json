@@ -93,6 +93,18 @@
         "dec_a79a1230"
       ],
       "transcript_ids": []
+    },
+    {
+      "id": "sess_0775fe3a",
+      "repo": "SynAeri/Playcrowd",
+      "branch": "jordan",
+      "agent": "claude",
+      "engineer": null,
+      "ticket_id": null,
+      "started_at": "2026-03-22T07:33:36.212638+00:00",
+      "ended_at": null,
+      "decision_ids": [],
+      "transcript_ids": []
     }
   ],
   "decisions": [

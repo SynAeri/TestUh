@@ -82,7 +82,11 @@ _pr_milestones_cache_time: datetime | None = None
 
 def _load_data() -> dict:
     if DATA_FILE.exists():
-        return json.loads(DATA_FILE.read_text())
+        data = json.loads(DATA_FILE.read_text())
+        # Migration: Add transcripts array if missing
+        if "transcripts" not in data:
+            data["transcripts"] = []
+        return data
     return {"sessions": [], "decisions": [], "transcripts": []}
 
 
