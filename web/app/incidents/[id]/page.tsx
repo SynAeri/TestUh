@@ -16,6 +16,7 @@ interface CodingContext {
   files_changed: string[];
   intended_outcome: string;
   session_timestamp: string;
+  session_id?: string;
 }
 
 interface PR {
@@ -468,7 +469,7 @@ export default function IncidentDashboard({ params }: { params: Promise<{ id: st
                   THE MAGIC
                 </span>
               </div>
-              <TranscriptViewButtons sessionId={incident.coding_context.session_timestamp} />
+              <TranscriptViewButtons sessionId={incident.coding_context.session_id || incident.coding_context.session_timestamp} />
             </div>
 
             <div className="space-y-4">
