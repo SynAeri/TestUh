@@ -67,6 +67,7 @@ interface CodingContext {
   files_changed: string[];
   intended_outcome: string;
   session_timestamp: string;
+  session_id?: string;
 }
 interface PR {
   pr_id: string; title: string; description: string; author: string;

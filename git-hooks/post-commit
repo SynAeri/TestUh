@@ -1,0 +1,42 @@
+#!/bin/bash
+# Universal Git Hook - Automatically logs commits to Nexus backend
+# Works with ANY AI tool (Claude, Cursor, Copilot, or manual coding)
+
+NEXUS_API_URL="${NEXUS_API_URL:-https://unflattering-elinor-distinctively.ngrok-free.dev}"
+
+# Get commit details
+COMMIT_SHA=$(git rev-parse HEAD)
+COMMIT_MESSAGE=$(git log -1 --pretty=%B)
+AUTHOR=$(git log -1 --pretty=%an)
+TIMESTAMP=$(git log -1 --pretty=%cI)
+FILES_CHANGED=$(git diff-tree --no-commit-id --name-only -r HEAD)
+
+# Get branch
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+# Get repo name
+REPO=$(basename $(git rev-parse --show-toplevel))
+
+# Create payload
+PAYLOAD=$(cat <<EOF
+{
+  "commit_sha": "$COMMIT_SHA",
+  "message": "$COMMIT_MESSAGE",
+  "author": "$AUTHOR",
+  "timestamp": "$TIMESTAMP",
+  "branch": "$BRANCH",
+  "repo": "$REPO",
+  "files_changed": $(echo "$FILES_CHANGED" | jq -R -s -c 'split("\n")[:-1]')
+}
+EOF
+)
+
+# Send to backend (non-blocking)
+curl -X POST "$NEXUS_API_URL/api/commits" \
+  -H "Content-Type: application/json" \
+  -d "$PAYLOAD" \
+  --silent \
+  --max-time 5 \
+  > /dev/null 2>&1 &
+
+exit 0

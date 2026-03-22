@@ -221,7 +221,7 @@ REFINED SUMMARY:"""
 
     try:
         response = requests.post(
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent",
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent",
             headers={"Content-Type": "application/json"},
             params={"key": gemini_key},
             json={
@@ -241,7 +241,7 @@ REFINED SUMMARY:"""
                 "session_id": session_id,
                 "refinement_type": "major_changes",
                 "refined_content": refined_content,
-                "metadata": {"message_count": len(messages), "model": "gemini-pro"}
+                "metadata": {"message_count": len(messages), "model": "gemini-flash-latest"}
             }, on_conflict="session_id,refinement_type").execute()
         except Exception as e:
             print(f"Failed to cache refinement: {e}")
@@ -251,4 +251,89 @@ REFINED SUMMARY:"""
         "refined_content": refined_content,
         "generated_at": datetime.utcnow().isoformat(),
         "cached": False
+    }
+
+
+@router.get("/{session_id}/merged")
+async def get_merged_transcript(
+    session_id: str,
+    compression_level: str = "medium"
+):
+    """
+    Get a merged/compressed version of the transcript.
+
+    This reduces storage overhead by combining messages into a condensed format.
+
+    Compression levels:
+    - light: Keep all user/assistant pairs, just remove redundant confirmations
+    - medium: Merge consecutive assistant messages, summarize repetitive exchanges
+    - heavy: Keep only key decisions and major code changes
+
+    Original messages are NOT deleted - this is a read-only operation.
+    """
+    # Get full transcript
+    if supabase:
+        try:
+            result = supabase.table("transcripts").select("*").eq("session_id", session_id).order("timestamp").execute()
+            messages = result.data
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+    else:
+        # Fallback to in-memory store
+        messages = [m for m in STORE.transcripts if m["session_id"] == session_id]
+
+    if not messages:
+        raise HTTPException(status_code=404, detail="No transcript found for this session")
+
+    # Apply compression based on level
+    if compression_level == "light":
+        # Remove simple confirmations like "ok", "done", "sure"
+        filtered = []
+        for msg in messages:
+            content_lower = msg['content'].lower().strip()
+            if len(content_lower) > 10 or content_lower not in ['ok', 'done', 'sure', 'yes', 'no', 'thanks']:
+                filtered.append(msg)
+        merged_messages = filtered
+
+    elif compression_level == "heavy":
+        # Keep only messages that mention decisions, errors, or code changes
+        keywords = ['error', 'bug', 'fix', 'implement', 'create', 'update', 'decision', 'choose', 'add', 'remove']
+        filtered = []
+        for msg in messages:
+            content_lower = msg['content'].lower()
+            if any(keyword in content_lower for keyword in keywords) or len(msg['content']) > 200:
+                filtered.append(msg)
+        merged_messages = filtered
+
+    else:  # medium (default)
+        # Merge consecutive messages from same role
+        merged_messages = []
+        i = 0
+        while i < len(messages):
+            current = messages[i]
+
+            # Look ahead for consecutive messages from same role
+            combined_content = current['content']
+            j = i + 1
+            while j < len(messages) and messages[j]['role'] == current['role']:
+                combined_content += "\n\n" + messages[j]['content']
+                j += 1
+
+            # Create merged message
+            merged_messages.append({
+                "id": current['id'],
+                "role": current['role'],
+                "content": combined_content,
+                "timestamp": current['timestamp'],
+                "message_count": j - i  # How many messages were merged
+            })
+            i = j
+
+    return {
+        "session_id": session_id,
+        "compression_level": compression_level,
+        "original_message_count": len(messages),
+        "merged_message_count": len(merged_messages),
+        "compression_ratio": f"{(1 - len(merged_messages)/len(messages))*100:.1f}%",
+        "messages": merged_messages
     }
