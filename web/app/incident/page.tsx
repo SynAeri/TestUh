@@ -16,6 +16,7 @@ interface CodingContext {
   files_changed: string[];
   intended_outcome: string;
   session_timestamp: string;
+  session_id?: string;
 }
 
 interface PR {
@@ -231,7 +232,7 @@ function TranscriptViewButtons({ sessionId }: { sessionId: string }) {
   );
 }
 
-function IncidentDashboardInner() {
+function IncidentDashboardContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const incidentId = searchParams.get('id');
@@ -458,7 +459,7 @@ function IncidentDashboardInner() {
                   THE MAGIC
                 </span>
               </div>
-              <TranscriptViewButtons sessionId={incident.coding_context.session_timestamp} />
+              <TranscriptViewButtons sessionId={incident.coding_context.session_id || incident.coding_context.session_timestamp} />
             </div>
 
             <div className="space-y-4">
@@ -681,8 +682,12 @@ function IncidentDashboardInner() {
 
 export default function IncidentDashboard() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#f7f6f3] flex items-center justify-center"><div className="text-gray-500">Loading...</div></div>}>
-      <IncidentDashboardInner />
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#f7f6f3] flex items-center justify-center">
+        <div className="text-gray-500">Loading...</div>
+      </div>
+    }>
+      <IncidentDashboardContent />
     </Suspense>
   );
 }
